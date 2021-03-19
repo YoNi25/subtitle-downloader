@@ -49,5 +49,5 @@ func DownloadShowsSubtitles(subtitleToDownload SubtitleToDownload) {
 		log.Fatal(err)
 	}
 
-	log.Printf("🎉 Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
+	log.Printf("🎉     Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
 }

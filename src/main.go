@@ -32,7 +32,7 @@ func initializeCommandArgs() {
 	flag.Parse()
 
 	if len(showStr) == 0 {
-		panic("Missing parameters. Please run ./subtitle-downloader -h to know available parameters")
+		panic("❌     Missing parameters. Please run ./subtitle-downloader -h to know available parameters")
 	}
 
 }
