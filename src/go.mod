@@ -9,7 +9,7 @@ replace input => ./input
 replace downloader => ./downloader
 
 require (
-	downloader v0.0.0-00010101000000-000000000000 // indirect
+	downloader v0.0.0-00010101000000-000000000000
 	github.com/matcornic/addic7ed v0.2.0
 	input v0.0.0-00010101000000-000000000000
 	utils v0.0.0-00010101000000-000000000000
