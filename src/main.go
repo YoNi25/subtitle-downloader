@@ -1,38 +1,20 @@
 package main
 
-import (
-	"flag"
-)
-
-var showStr string
-var language string
-var dirPath string
-
 func main() {
-	initializeCommandArgs()
+	configuration = InitializeConfig()
+	colors = InitializeColors()
+
+	input := ReadInputArgs(configuration, colors)
 
 	subtitle := RetrieveShow(SearchSubtitle{
-		name:     showStr,
-		language: language,
+		name:     input.showName.fullname,
+		language: input.language,
 	})
 
 	DownloadShowsSubtitles(SubtitleToDownload{
 		subtitle:  subtitle,
-		name:      showStr,
-		extension: "srt",
-		dirPath:   dirPath,
+		name:      input.showName.fullname,
+		extension: configuration.SubtitleExtension,
+		dirPath:   input.dirPath.fullPath,
 	})
-}
-
-func initializeCommandArgs() {
-
-	flag.StringVar(&showStr, "showStr", "", "The Show's episode name")
-	flag.StringVar(&language, "language", "French", "The wanted subtitle language")
-	flag.StringVar(&dirPath, "dirPath", ".", "The dir path where the file should be download")
-	flag.Parse()
-
-	if len(showStr) == 0 {
-		panic("❌     Missing parameters. Please run ./subtitle-downloader -h to know available parameters")
-	}
-
 }
