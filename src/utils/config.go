@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ type Configuration struct {
 	SubtitleExtension string
 }
 
-func InitializeConfig() Configuration {
+func initializeConfig() Configuration {
 	configuration := Configuration{}
 	err := gonfig.GetConf(getConfigFileName(), &configuration)
 	if err != nil {
@@ -33,7 +33,7 @@ func getConfigFileName() string {
 	if len(env) == 0 {
 		env = "development"
 	}
-	filename := []string{"../", "config/", "config.", env, ".json"}
+	filename := []string{"../../", "config/", "config.", env, ".json"}
 	_, dirname, _, _ := runtime.Caller(0)
 	filePath := path.Join(filepath.Dir(dirname), strings.Join(filename, ""))
 

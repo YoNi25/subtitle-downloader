@@ -1,20 +1,15 @@
 package main
 
+import (
+	"downloader"
+	"input"
+	"utils"
+)
+
 func main() {
-	configuration = InitializeConfig()
-	colors = InitializeColors()
+	utils.Init()
 
-	input := ReadInputArgs(configuration, colors)
+	inputs := input.ReadInputArgs()
 
-	subtitle := RetrieveShow(SearchSubtitle{
-		name:     input.showName.fullname,
-		language: input.language,
-	})
-
-	DownloadShowsSubtitles(SubtitleToDownload{
-		subtitle:  subtitle,
-		name:      input.showName.fullname,
-		extension: configuration.SubtitleExtension,
-		dirPath:   input.dirPath.fullPath,
-	})
+	downloader.DownloadSubtitles(inputs)
 }
