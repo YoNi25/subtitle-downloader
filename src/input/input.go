@@ -58,17 +58,19 @@ func readDirPath(reader *bufio.Reader) int {
 		os.Exit(1)
 	}
 
+	dirPathInput = convertCRLFtoLF(dirPathInput);
 	if len(dirPathInput) == 0 {
 		dirPathInput = strconv.Itoa(ServerDirPath)
 	}
 
-	dirPathDigit, _ := strconv.Atoi(convertCRLFtoLF(dirPathInput))
+	dirPathDigit, _ := strconv.Atoi(dirPathInput)
 	return dirPathDigit
 }
 
-func readLanguage(reader *bufio.Reader) string {
-	colors.Green.Printf("Indicate the subtitles' Language (Default : %s)\n", configuration.DefaultLanguage)
-
+func readLanguage(reader *bufio.Reader) int {
+	colors.Green.Printf("Indicate the subtitles' Language\n")
+	colors.White.Printf("[%d] - French\n", French)
+	colors.White.Printf("[%d] - English\n", English)
 	languageInput, err := reader.ReadString('\n')
 
 	if err != nil {
@@ -76,17 +78,26 @@ func readLanguage(reader *bufio.Reader) string {
 		os.Exit(1)
 	}
 
-	language := convertCRLFtoLF(languageInput)
-
-	if len(language) > 0 {
-		return language
+	languageInput = convertCRLFtoLF(languageInput)
+	if len(languageInput) == 0 {
+		languageInput = "-1"
 	}
-	return configuration.DefaultLanguage
+
+	languageDigit, _ := strconv.Atoi(languageInput)
+	return languageDigit
 }
 
 func confirmInput(reader *bufio.Reader, input Input) {
 
-	colors.Green.Printf("Download %s.%s to %s. Confirm that choice ? [Yn]\n", input.ShowName.Fullname, configuration.SubtitleExtension, input.DirPath.FullPath)
+	colors.Blue.Println()
+	colors.Blue.Println("------------------")
+	colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, configuration.SubtitleExtension)
+	colors.Blue.Printf("Chosen Language : %s\n", input.Language)
+	colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
+	colors.Blue.Println("------------------")
+	colors.Blue.Println()
+	colors.Green.Println("Confirm that choice ? [Yn]")
+
 	confirm, err := reader.ReadString('\n')
 
 	if err != nil {
@@ -96,7 +107,7 @@ func confirmInput(reader *bufio.Reader, input Input) {
 
 	confirm = convertCRLFtoLF(confirm)
 
-	if !(len(confirm) == 0 || strings.ToUpper(confirm) != "Y") {
+	if !(len(confirm) == 0 || strings.ToUpper(confirm) == "Y") {
 		colors.Red.Printf("Confirmation failed ! Invalid answer '%s'\n", confirm)
 		os.Exit(2)
 	}
@@ -106,11 +117,11 @@ func convertCRLFtoLF(toConvert string) string {
 	return strings.Replace(toConvert, "\n", "", -1)
 }
 
-func buildInput(showName string, dirPathDigit int, language string) Input {
+func buildInput(showName string, dirPathDigit int, languageDigit int) Input {
 
 	showNameStruct := buildShowName(showName)
 	dirPathStruct := buildDirPath(dirPathDigit, showNameStruct)
-
+	language := buildLanguage(languageDigit)
 	return Input{
 		ShowName: showNameStruct,
 		DirPath:  dirPathStruct,
