@@ -67,9 +67,10 @@ func readDirPath(reader *bufio.Reader) int {
 	return dirPathDigit
 }
 
-func readLanguage(reader *bufio.Reader) string {
-	colors.Green.Printf("Indicate the subtitles' Language (Default : %s)\n", configuration.DefaultLanguage)
-
+func readLanguage(reader *bufio.Reader) int {
+	colors.Green.Printf("Indicate the subtitles' Language\n")
+	colors.White.Printf("[%d] - French\n", French)
+	colors.White.Printf("[%d] - English\n", English)
 	languageInput, err := reader.ReadString('\n')
 
 	if err != nil {
@@ -77,12 +78,13 @@ func readLanguage(reader *bufio.Reader) string {
 		os.Exit(1)
 	}
 
-	language := convertCRLFtoLF(languageInput)
-
-	if len(language) > 0 {
-		return language
+	languageInput = convertCRLFtoLF(languageInput)
+	if len(languageInput) == 0 {
+		languageInput = "-1"
 	}
-	return configuration.DefaultLanguage
+
+	languageDigit, _ := strconv.Atoi(languageInput)
+	return languageDigit
 }
 
 func confirmInput(reader *bufio.Reader, input Input) {
@@ -107,11 +109,11 @@ func convertCRLFtoLF(toConvert string) string {
 	return strings.Replace(toConvert, "\n", "", -1)
 }
 
-func buildInput(showName string, dirPathDigit int, language string) Input {
+func buildInput(showName string, dirPathDigit int, languageDigit int) Input {
 
 	showNameStruct := buildShowName(showName)
 	dirPathStruct := buildDirPath(dirPathDigit, showNameStruct)
-
+	language := buildLanguage(languageDigit)
 	return Input{
 		ShowName: showNameStruct,
 		DirPath:  dirPathStruct,
