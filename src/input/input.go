@@ -58,11 +58,12 @@ func readDirPath(reader *bufio.Reader) int {
 		os.Exit(1)
 	}
 
+	dirPathInput = convertCRLFtoLF(dirPathInput);
 	if len(dirPathInput) == 0 {
 		dirPathInput = strconv.Itoa(ServerDirPath)
 	}
 
-	dirPathDigit, _ := strconv.Atoi(convertCRLFtoLF(dirPathInput))
+	dirPathDigit, _ := strconv.Atoi(dirPathInput)
 	return dirPathDigit
 }
 
@@ -96,7 +97,7 @@ func confirmInput(reader *bufio.Reader, input Input) {
 
 	confirm = convertCRLFtoLF(confirm)
 
-	if !(len(confirm) == 0 || strings.ToUpper(confirm) != "Y") {
+	if !(len(confirm) == 0 || strings.ToUpper(confirm) == "Y") {
 		colors.Red.Printf("Confirmation failed ! Invalid answer '%s'\n", confirm)
 		os.Exit(2)
 	}
