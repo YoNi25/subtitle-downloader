@@ -89,7 +89,15 @@ func readLanguage(reader *bufio.Reader) int {
 
 func confirmInput(reader *bufio.Reader, input Input) {
 
-	colors.Green.Printf("Download %s.%s to %s. Confirm that choice ? [Yn]\n", input.ShowName.Fullname, configuration.SubtitleExtension, input.DirPath.FullPath)
+	colors.Blue.Println()
+	colors.Blue.Println("------------------")
+	colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, configuration.SubtitleExtension)
+	colors.Blue.Printf("Chosen Language : %s\n", input.Language)
+	colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
+	colors.Blue.Println("------------------")
+	colors.Blue.Println()
+	colors.Green.Println("Confirm that choice ? [Yn]")
+
 	confirm, err := reader.ReadString('\n')
 
 	if err != nil {
