@@ -12,8 +12,7 @@ const ServerDirPath = 1
 const DesktopDirPath = 2
 
 func buildDirPath(dirPathDigit int, showName ShowName) DirPath {
-	rootPath := configuration.ServerDirPath
-	showFolder := fmt.Sprintf("%s/%s", showName.TvShow, showName.Season)
+	var rootPath string
 
 	switch dirPathDigit {
 	case ServerDirPath:
@@ -26,6 +25,8 @@ func buildDirPath(dirPathDigit int, showName ShowName) DirPath {
 		colors.Yellow.Printf("⚠️  Unable to find directory Path %d. Using default DirPath - '%s'\n", dirPathDigit, configuration.ServerDirPath)
 		rootPath = configuration.ServerDirPath
 	}
+
+	showFolder := fmt.Sprintf("%s/%s", showName.TvShow, showName.Season)
 
 	return DirPath{
 		RootPath: rootPath,

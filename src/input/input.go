@@ -54,11 +54,11 @@ func readDirPath(reader *bufio.Reader) int {
 	colors.White.Printf("[%d] - %s\n", DesktopDirPath, configuration.DesktopDirPath)
 	dirPathInput, err := reader.ReadString('\n')
 	if err != nil {
-		colors.Red.Printf("Read DirPath failed - '%s'\n", err)
+		colors.Red.Printf("❌ Read DirPath failed - '%s'\n", err)
 		os.Exit(1)
 	}
 
-	dirPathInput = convertCRLFtoLF(dirPathInput);
+	dirPathInput = convertCRLFtoLF(dirPathInput)
 	if len(dirPathInput) == 0 {
 		dirPathInput = strconv.Itoa(ServerDirPath)
 	}
