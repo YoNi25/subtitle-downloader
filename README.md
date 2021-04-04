@@ -1,5 +1,5 @@
 # subtitle-downloader
-Download subtittle from Addic7ed
+Download subtittle from Addic7ed thanks to https://github.com/matcornic/addic7ed
 
 ## Build
 To build sources to an executable, go to `src` directory, then run 
