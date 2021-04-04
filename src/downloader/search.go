@@ -25,5 +25,9 @@ func retrieveShow(searchSubtitle searchSubtitle) addic7ed.Subtitle {
 	colors.Blue.Println(subtitle.Language) // Output: English
 	colors.Blue.Println("------------------")
 
+	if !strings.Contains(subtitle.Version, searchSubtitle.version) {
+		colors.Yellow.Printf("\n⚠️\t Subtitle versions aren't the same. Given '%s'. Get '%s'.\n", searchSubtitle.version, subtitle.Version)
+		colors.Yellow.Printf(" \t Get a look on %s to check versions compatibility.\n\n", subtitle.Link)
+	}
 	return subtitle
 }
