@@ -11,12 +11,11 @@ func DownloadSubtitles(input input.Input) {
 
 	colors = utils.Colors
 
-	colors.Blue.Printf("Looking For subtitles for %s\n", input.ShowName.Fullname)
-
 	subtitle := retrieveShow(
 		searchSubtitle{
 			name:     input.ShowName.Fullname,
 			language: input.Language,
+			version:  input.ShowName.Version,
 		})
 
 	downloadShowsSubtitles(subtitleToDownload{
