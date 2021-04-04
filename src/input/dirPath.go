@@ -22,6 +22,9 @@ func buildDirPath(dirPathDigit int, showName ShowName) DirPath {
 	case DesktopDirPath:
 		rootPath = configuration.DesktopDirPath
 		break
+	default:
+		colors.Yellow.Printf("⚠️  Unable to find directory Path %d. Using default DirPath - '%s'\n", dirPathDigit, configuration.ServerDirPath)
+		rootPath = configuration.ServerDirPath
 	}
 
 	return DirPath{

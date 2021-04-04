@@ -40,7 +40,7 @@ func readShowName(reader *bufio.Reader) string {
 	showNameInput, err := reader.ReadString('\n')
 
 	if err != nil {
-		colors.Red.Printf("Read showName failed - '%s'\n", err)
+		colors.Red.Printf("❌ Read showName failed - '%s'\n", err)
 		os.Exit(1)
 	}
 
@@ -74,7 +74,7 @@ func readLanguage(reader *bufio.Reader) int {
 	languageInput, err := reader.ReadString('\n')
 
 	if err != nil {
-		colors.Red.Printf("Read Language failed - '%s'\n", err)
+		colors.Red.Printf("❌ Read Language failed - '%s'\n", err)
 		os.Exit(1)
 	}
 
@@ -90,25 +90,24 @@ func readLanguage(reader *bufio.Reader) int {
 func confirmInput(reader *bufio.Reader, input Input) {
 
 	colors.Blue.Println()
-	colors.Blue.Println("------------------")
+	colors.Blue.Println("---------------------SUMMARY---------------------")
 	colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, configuration.SubtitleExtension)
 	colors.Blue.Printf("Chosen Language : %s\n", input.Language)
 	colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
-	colors.Blue.Println("------------------")
-	colors.Blue.Println()
+	colors.Blue.Println("-------------------------------------------------")
 	colors.Green.Println("Confirm that choice ? [Yn]")
 
 	confirm, err := reader.ReadString('\n')
 
 	if err != nil {
-		colors.Red.Printf("Read confirmation failed - '%s'\n", err)
+		colors.Red.Printf("❌ Read confirmation failed - '%s'\n", err)
 		os.Exit(1)
 	}
 
 	confirm = convertCRLFtoLF(confirm)
 
 	if !(len(confirm) == 0 || strings.ToUpper(confirm) == "Y") {
-		colors.Red.Printf("Confirmation failed ! Invalid answer '%s'\n", confirm)
+		colors.Red.Printf("❌ Confirmation failed ! Invalid answer '%s'\n", confirm)
 		os.Exit(2)
 	}
 }

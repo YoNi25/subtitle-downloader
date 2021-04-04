@@ -15,7 +15,7 @@ func buildLanguage(languageDigit int) string {
 		language = "English"
 		break
 	default:
-		colors.Red.Printf("Unable to find language %d. Using default Language - '%s'\n", languageDigit, configuration.DefaultLanguage)
+		colors.Yellow.Printf("⚠️  Unable to find Language %d. Using Default Language - '%s'\n", languageDigit, configuration.DefaultLanguage)
 		language = configuration.DefaultLanguage
 	}
 

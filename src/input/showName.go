@@ -22,7 +22,7 @@ func buildShowName(showNameStr string) ShowName {
 
 	match := showNamePattern.FindStringSubmatch(showNameStr)
 	if len(match) == 0 {
-		colors.Red.Printf("Unable to parse '%s'", showNameStr)
+		colors.Red.Printf("❌ Unable to parse Show name'%s'\n", showNameStr)
 		os.Exit(3)
 	}
 
