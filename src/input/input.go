@@ -16,31 +16,25 @@ type Input struct {
 	DirPath  DirPath
 }
 
-var colors utils.ColorsStruct
-var configuration utils.Configuration
-
 func ReadInputArgs() Input {
-
-	colors = utils.Colors
-	configuration = utils.Config
 
 	reader := bufio.NewReader(os.Stdin)
 
 	showName, err := readShowName(reader)
 	if err != nil {
-		colors.Red.Printf("%s\n", err)
+		utils.Colors.Red.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
 	dirPathDigit, err := readDirPath(reader)
 	if err != nil {
-		colors.Red.Printf("%s\n", err)
+		utils.Colors.Red.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
 	language, err := readLanguage(reader)
 	if err != nil {
-		colors.Red.Printf("%s\n", err)
+		utils.Colors.Red.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
@@ -48,16 +42,16 @@ func ReadInputArgs() Input {
 	if err != nil {
 		typeOf := reflect.TypeOf(err)
 		if (typeOf == reflect.TypeOf(&utils.Error{})) {
-			colors.Red.Printf("%s\n", err)
+			utils.Colors.Red.Printf("%s\n", err)
 			os.Exit(3)
 		} else if typeOf == reflect.TypeOf(utils.Warnings{}) {
-			colors.Yellow.Printf("%s\n", err)
+			utils.Colors.Yellow.Printf("%s\n", err)
 		}
 	}
 
 	err = confirmInput(reader, input)
 	if err != nil {
-		colors.Red.Printf("%s\n", err)
+		utils.Colors.Red.Printf("%s\n", err)
 		os.Exit(2)
 	}
 
@@ -65,7 +59,7 @@ func ReadInputArgs() Input {
 }
 
 func readShowName(reader *bufio.Reader) (string, error) {
-	colors.Green.Println("Indicate the show's episode name")
+	utils.Colors.Green.Println("Indicate the show's episode name")
 
 	showNameInput, err := reader.ReadString('\n')
 
@@ -77,9 +71,9 @@ func readShowName(reader *bufio.Reader) (string, error) {
 }
 
 func readDirPath(reader *bufio.Reader) (int, error) {
-	colors.Green.Println("Indicate the directory path where the file should be download")
-	colors.White.Printf("[%d] - %s\n", ServerDirPath, configuration.ServerDirPath)
-	colors.White.Printf("[%d] - %s\n", DesktopDirPath, configuration.DesktopDirPath)
+	utils.Colors.Green.Println("Indicate the directory path where the file should be download")
+	utils.Colors.White.Printf("[%d] - %s\n", ServerDirPath, utils.Config.ServerDirPath)
+	utils.Colors.White.Printf("[%d] - %s\n", DesktopDirPath, utils.Config.DesktopDirPath)
 
 	dirPathInput, err := reader.ReadString('\n')
 	if err != nil {
@@ -96,9 +90,9 @@ func readDirPath(reader *bufio.Reader) (int, error) {
 }
 
 func readLanguage(reader *bufio.Reader) (int, error) {
-	colors.Green.Printf("Indicate the subtitles' Language\n")
-	colors.White.Printf("[%d] - French\n", French)
-	colors.White.Printf("[%d] - English\n", English)
+	utils.Colors.Green.Printf("Indicate the subtitles' Language\n")
+	utils.Colors.White.Printf("[%d] - French\n", French)
+	utils.Colors.White.Printf("[%d] - English\n", English)
 
 	languageInput, err := reader.ReadString('\n')
 
@@ -117,13 +111,13 @@ func readLanguage(reader *bufio.Reader) (int, error) {
 
 func confirmInput(reader *bufio.Reader, input Input) error {
 
-	colors.Blue.Println()
-	colors.Blue.Println("---------------------SUMMARY---------------------")
-	colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, configuration.SubtitleExtension)
-	colors.Blue.Printf("Chosen Language : %s\n", input.Language)
-	colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
-	colors.Blue.Println("-------------------------------------------------")
-	colors.Green.Println("Confirm that choice ? [Yn]")
+	utils.Colors.Blue.Println()
+	utils.Colors.Blue.Println("---------------------SUMMARY---------------------")
+	utils.Colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, utils.Config.SubtitleExtension)
+	utils.Colors.Blue.Printf("Chosen Language : %s\n", input.Language)
+	utils.Colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
+	utils.Colors.Blue.Println("-------------------------------------------------")
+	utils.Colors.Green.Println("Confirm that choice ? [Yn]")
 
 	confirm, err := reader.ReadString('\n')
 
@@ -156,7 +150,7 @@ func buildInput(showName string, dirPathDigit int, languageDigit int) (Input, er
 		warnings = append(warnings, utils.Warning{dirPathError.Error()})
 	}
 
-	language, languageError := buildLanguage(languageDigit, configuration.DefaultLanguage)
+	language, languageError := buildLanguage(languageDigit, utils.Config.DefaultLanguage)
 	if languageError != nil {
 		warnings = append(warnings, utils.Warning{languageError.Error()})
 	}

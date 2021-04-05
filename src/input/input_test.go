@@ -10,14 +10,14 @@ import (
 )
 
 func init() {
-	colors = utils.ColorsStruct{
+	utils.Colors = utils.ColorsStruct{
 		Green:  color.New(),
 		White:  color.New(),
 		Yellow: color.New(),
 		Red:    color.New(),
 		Blue:   color.New(),
 	}
-	configuration = utils.Configuration{
+	utils.Config =  utils.Configuration{
 		ServerDirPath:   "/server/dir/path",
 		DesktopDirPath:  "/desktop/dir/path",
 		DefaultLanguage: "Zulu",
