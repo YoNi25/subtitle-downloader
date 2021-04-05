@@ -1,11 +1,17 @@
 package input
 
+import (
+	"errors"
+	"fmt"
+)
+
 const French = 1
 const English = 2
 
-func buildLanguage(languageDigit int) string {
+func buildLanguage(languageDigit int, defaultLanguage string) (string, error) {
 
 	var language string
+	var error error = nil
 
 	switch languageDigit {
 	case French:
@@ -15,9 +21,9 @@ func buildLanguage(languageDigit int) string {
 		language = "English"
 		break
 	default:
-		colors.Yellow.Printf("⚠️  Unable to find Language %d. Using Default Language - '%s'\n", languageDigit, configuration.DefaultLanguage)
-		language = configuration.DefaultLanguage
+		error = errors.New(fmt.Sprintf("Unable to find Language %d. Using Default Language - '%s'", languageDigit, defaultLanguage))
+		language = defaultLanguage
 	}
 
-	return language
+	return language, error
 }

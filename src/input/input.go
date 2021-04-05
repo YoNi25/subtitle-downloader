@@ -118,9 +118,19 @@ func convertCRLFtoLF(toConvert string) string {
 
 func buildInput(showName string, dirPathDigit int, languageDigit int) Input {
 
-	showNameStruct := buildShowName(showName)
+	showNameStruct, err := buildShowName(showName)
+	if err != nil {
+		colors.Red.Printf("❌ %s\n", err)
+		os.Exit(3)
+	}
+
 	dirPathStruct := buildDirPath(dirPathDigit, showNameStruct)
-	language := buildLanguage(languageDigit)
+
+	language, err := buildLanguage(languageDigit, configuration.DefaultLanguage)
+	if err != nil {
+		colors.Red.Printf("⚠️  %s\n", err)
+	}
+
 	return Input{
 		ShowName: showNameStruct,
 		DirPath:  dirPathStruct,
