@@ -11,7 +11,7 @@ const English = 2
 func buildLanguage(languageDigit int, defaultLanguage string) (string, error) {
 
 	var language string
-	var error error = nil
+	var error error
 
 	switch languageDigit {
 	case French:
@@ -21,7 +21,7 @@ func buildLanguage(languageDigit int, defaultLanguage string) (string, error) {
 		language = "English"
 		break
 	default:
-		error = errors.New(fmt.Sprintf("Unable to find Language %d. Using Default Language - '%s'", languageDigit, defaultLanguage))
+		error = errors.New(fmt.Sprintf("No Language matches with %d. Using default Language - '%s'", languageDigit, defaultLanguage))
 		language = defaultLanguage
 	}
 

@@ -8,6 +8,10 @@ import (
 func init() {
 	colors = utils.ColorsStruct{
 		Yellow: color.New(),
-		Red : color.New(),
+		Red:    color.New(),
+	}
+	configuration = utils.Configuration{
+		ServerDirPath:  "/server/dir/path",
+		DesktopDirPath: "/desktop/dir/path",
 	}
 }

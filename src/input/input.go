@@ -124,11 +124,14 @@ func buildInput(showName string, dirPathDigit int, languageDigit int) Input {
 		os.Exit(3)
 	}
 
-	dirPathStruct := buildDirPath(dirPathDigit, showNameStruct)
+	dirPathStruct, err := buildDirPath(dirPathDigit, showNameStruct)
+	if err != nil {
+		colors.Yellow.Printf("⚠️  %s\n", err)
+	}
 
 	language, err := buildLanguage(languageDigit, configuration.DefaultLanguage)
 	if err != nil {
-		colors.Red.Printf("⚠️  %s\n", err)
+		colors.Yellow.Printf("⚠️  %s\n", err)
 	}
 
 	return Input{

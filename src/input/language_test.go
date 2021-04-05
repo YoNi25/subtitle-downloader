@@ -24,5 +24,5 @@ func Test_BuildLanguage(t *testing.T) {
 func Test_BuildLanguageWithDefaultValue(t *testing.T) {
 	language, err := buildLanguage(-1, "Zulu")
 	assert.Equal(t, "Zulu", language)
-	assert.Equal(t, "Unable to find Language -1. Using Default Language - 'Zulu'", err.Error())
+	assert.Equal(t, "No Language matches with -1. Using default Language - 'Zulu'", err.Error())
 }

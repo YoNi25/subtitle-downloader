@@ -1,6 +1,9 @@
 package input
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type DirPath struct {
 	RootPath string
@@ -11,8 +14,9 @@ type DirPath struct {
 const ServerDirPath = 1
 const DesktopDirPath = 2
 
-func buildDirPath(dirPathDigit int, showName ShowName) DirPath {
+func buildDirPath(dirPathDigit int, showName ShowName) (DirPath, error) {
 	var rootPath string
+	var error error
 
 	switch dirPathDigit {
 	case ServerDirPath:
@@ -22,7 +26,7 @@ func buildDirPath(dirPathDigit int, showName ShowName) DirPath {
 		rootPath = configuration.DesktopDirPath
 		break
 	default:
-		colors.Yellow.Printf("⚠️  Unable to find directory Path %d. Using default DirPath - '%s'\n", dirPathDigit, configuration.ServerDirPath)
+		error = errors.New(fmt.Sprintf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, configuration.ServerDirPath))
 		rootPath = configuration.ServerDirPath
 	}
 
@@ -32,5 +36,5 @@ func buildDirPath(dirPathDigit int, showName ShowName) DirPath {
 		RootPath: rootPath,
 		Folder:   showFolder,
 		FullPath: fmt.Sprintf("%s/%s", rootPath, showFolder),
-	}
+	}, error
 }
