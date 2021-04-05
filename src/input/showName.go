@@ -1,11 +1,12 @@
 package input
 
 import (
-	"os"
+	"fmt"
 	"regexp"
 	"strings"
 )
 
+//ShowName The structure that contains all Show information
 type ShowName struct {
 	TvShow   string
 	Season   string
@@ -17,13 +18,12 @@ type ShowName struct {
 
 const showNamePattern = "(?P<tvShow>.*)\\.(?P<season>S\\d+)(?P<episode>E\\d+).*-(?P<version>[^\\[]*)(\\[(?P<source>.*)\\])?"
 
-func buildShowName(showNameStr string) ShowName {
+func buildShowName(showNameStr string) (ShowName, error) {
 	showNamePattern := regexp.MustCompile(`(?i)` + showNamePattern)
 
 	match := showNamePattern.FindStringSubmatch(showNameStr)
 	if len(match) == 0 {
-		colors.Red.Printf("❌ Unable to parse Show name '%s'\n", showNameStr)
-		os.Exit(3)
+		return ShowName{}, fmt.Errorf("Unable to parse Show name '%s", showNameStr)
 	}
 
 	result := make(map[string]string)
@@ -37,8 +37,8 @@ func buildShowName(showNameStr string) ShowName {
 		strings.Title(strings.ReplaceAll(result["tvShow"], ".", " ")),
 		strings.Title(result["season"]),
 		strings.Title(result["episode"]),
-		strings.Title(result["version"]),
+		strings.ToUpper(result["version"]),
 		result["source"],
 		showNameStr,
-	}
+	}, nil
 }

@@ -1,11 +1,18 @@
 package input
 
+import (
+	"fmt"
+)
+// French const used on the prompt to display the option value
 const French = 1
+
+// English const used on the prompt to display the option value
 const English = 2
 
-func buildLanguage(languageDigit int) string {
+func buildLanguage(languageDigit int, defaultLanguage string) (string, error) {
 
 	var language string
+	var error error
 
 	switch languageDigit {
 	case French:
@@ -15,9 +22,9 @@ func buildLanguage(languageDigit int) string {
 		language = "English"
 		break
 	default:
-		colors.Yellow.Printf("⚠️  Unable to find Language %d. Using Default Language - '%s'\n", languageDigit, configuration.DefaultLanguage)
-		language = configuration.DefaultLanguage
+		error = fmt.Errorf("No Language matches with %d. Using default Language - '%s'", languageDigit, defaultLanguage)
+		language = defaultLanguage
 	}
 
-	return language
+	return language, error
 }
