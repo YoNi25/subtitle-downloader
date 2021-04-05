@@ -43,7 +43,7 @@ jobs:
         run: |
           cd src
           go vet .
-          golint .
+          golint ./...
 
       # Run testing on the code
       - name: Run testing
