@@ -7,11 +7,8 @@ import (
 	"utils"
 )
 
-var colors utils.ColorsStruct
-
+//DownloadSubtitles Use addic7ed client to search and download the best subtitle for the given Input
 func DownloadSubtitles(input input.Input) {
-
-	colors = utils.Colors
 
 	subtitle, retrieveShowErr := retrieveShow(
 		searchSubtitle{
@@ -23,10 +20,10 @@ func DownloadSubtitles(input input.Input) {
 	if retrieveShowErr != nil {
 		typeOf := reflect.TypeOf(retrieveShowErr)
 		if (typeOf == reflect.TypeOf(&utils.Error{})) {
-			colors.Red.Printf("%s\n", retrieveShowErr)
+			utils.Colors.Red.Printf("%s\n", retrieveShowErr)
 			os.Exit(4)
 		} else if typeOf == reflect.TypeOf(utils.Warnings{}) {
-			colors.Yellow.Printf("%s\n", retrieveShowErr)
+			utils.Colors.Yellow.Printf("%s\n", retrieveShowErr)
 		}
 	}
 
@@ -42,12 +39,12 @@ func DownloadSubtitles(input input.Input) {
 	if downloadErr != nil {
 		typeOf := reflect.TypeOf(downloadErr)
 		if (typeOf == reflect.TypeOf(&utils.Error{})) {
-			colors.Red.Printf("%s\n", downloadErr)
+			utils.Colors.Red.Printf("%s\n", downloadErr)
 			os.Exit(5)
 		} else if typeOf == reflect.TypeOf(utils.Warnings{}) {
-			colors.Yellow.Printf("%s\n", downloadErr)
+			utils.Colors.Yellow.Printf("%s\n", downloadErr)
 		}
 	}
 
-	colors.Green.Printf("🎉 Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
+	utils.Colors.Green.Printf("🎉 Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
 }

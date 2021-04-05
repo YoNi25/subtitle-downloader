@@ -9,7 +9,7 @@ import (
 	"utils"
 )
 
-const DOWNLOAD_DIR_PATH = "../../downloaded"
+const DownloadDirPath = "../../downloaded"
 
 func init() {
 	utils.Colors = utils.ColorsStruct{
@@ -34,7 +34,7 @@ func teardown() {
 }
 
 func removeDownloadDirectory() {
-	err := os.RemoveAll(DOWNLOAD_DIR_PATH)
+	err := os.RemoveAll(DownloadDirPath)
 	if err != nil {
 		panic(err)
 	}
@@ -58,14 +58,14 @@ func Test_downloadSubtitles(t *testing.T) {
 			Fullname: "The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re]",
 		},
 		DirPath: input.DirPath{
-			RootPath: DOWNLOAD_DIR_PATH,
+			RootPath: DownloadDirPath,
 			Folder:   "The Falcon And The Winter Soldier/S01",
-			FullPath: DOWNLOAD_DIR_PATH+"/The Falcon And The Winter Soldier/S01",
+			FullPath: DownloadDirPath +"/The Falcon And The Winter Soldier/S01",
 		},
 		Language: "French",
 	}
 
-	expectedFilePath := DOWNLOAD_DIR_PATH+"/The Falcon And The Winter Soldier/S01/The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re].srt"
+	expectedFilePath := DownloadDirPath +"/The Falcon And The Winter Soldier/S01/The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re].srt"
 
 	DownloadSubtitles(input);
 	assert.FileExists(t, expectedFilePath)

@@ -1,12 +1,12 @@
 package input
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
 )
 
+//ShowName The structure that contains all Show information
 type ShowName struct {
 	TvShow   string
 	Season   string
@@ -23,7 +23,7 @@ func buildShowName(showNameStr string) (ShowName, error) {
 
 	match := showNamePattern.FindStringSubmatch(showNameStr)
 	if len(match) == 0 {
-		return ShowName{}, errors.New(fmt.Sprintf("Unable to parse Show name '%s", showNameStr))
+		return ShowName{}, fmt.Errorf("Unable to parse Show name '%s", showNameStr)
 	}
 
 	result := make(map[string]string)

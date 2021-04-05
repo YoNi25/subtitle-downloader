@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// Configuration Define a structure for the configuration that could be used everywhere
 type Configuration struct {
 	ServerDirPath  string
 	DesktopDirPath string

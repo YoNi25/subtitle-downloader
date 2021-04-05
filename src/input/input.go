@@ -10,12 +10,14 @@ import (
 	"utils"
 )
 
+// Input Structure that contains structured information needed to download subtitles
 type Input struct {
 	ShowName ShowName
 	Language string
 	DirPath  DirPath
 }
 
+// ReadInputArgs Prompt all question to the user, then wrap them to a structure that will be used later
 func ReadInputArgs() Input {
 
 	reader := bufio.NewReader(os.Stdin)

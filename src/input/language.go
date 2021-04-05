@@ -1,11 +1,12 @@
 package input
 
 import (
-	"errors"
 	"fmt"
 )
-
+// French const used on the prompt to display the option value
 const French = 1
+
+// English const used on the prompt to display the option value
 const English = 2
 
 func buildLanguage(languageDigit int, defaultLanguage string) (string, error) {
@@ -21,7 +22,7 @@ func buildLanguage(languageDigit int, defaultLanguage string) (string, error) {
 		language = "English"
 		break
 	default:
-		error = errors.New(fmt.Sprintf("No Language matches with %d. Using default Language - '%s'", languageDigit, defaultLanguage))
+		error = fmt.Errorf("No Language matches with %d. Using default Language - '%s'", languageDigit, defaultLanguage)
 		language = defaultLanguage
 	}
 

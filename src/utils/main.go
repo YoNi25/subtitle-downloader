@@ -1,9 +1,12 @@
 package utils
 
-var Config Configuration
+// Colors expose the configuration to be used everywhere else
 var Colors ColorsStruct
+// Config expose the configuration to be used everywhere else
+var Config Configuration
 
+// Init initialize utils global variables
 func Init() {
-	Config = initializeConfig()
 	Colors = initializeColors()
+	Config = initializeConfig()
 }

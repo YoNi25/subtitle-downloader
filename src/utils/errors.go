@@ -2,11 +2,15 @@ package utils
 
 import "fmt"
 
+// Warning create a Warning Error structure
 type Warning struct {
 	Message string
 }
+
+// Warnings define an array of Warnings
 type Warnings []Warning
 
+// Error create a Error structure
 type Error struct {
 	Message string
 }

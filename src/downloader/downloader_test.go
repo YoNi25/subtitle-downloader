@@ -18,7 +18,7 @@ func Test_createMissingDirectoryAndDownloadSubtitles(t *testing.T) {
 		subtitle:  subtitles,
 		name:      "The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re]",
 		extension: "srt",
-		dirPath:   DOWNLOAD_DIR_PATH,
+		dirPath:   DownloadDirPath,
 	}
 
 	expectedFilePath := "../../downloaded/The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re].srt"
@@ -42,7 +42,7 @@ func Test_DownloadShowSubtitles(t *testing.T) {
 		subtitle:  subtitles,
 		name:      "Vikings.S06E11.King.Of.Kings.720p.AMZN.WEBRip.DDP5.1.x264-NTb[eztv.re]",
 		extension: "srt",
-		dirPath:   DOWNLOAD_DIR_PATH,
+		dirPath:   DownloadDirPath,
 	}
 
 	expectedFilePath := "../../downloaded/Vikings.S06E11.King.Of.Kings.720p.AMZN.WEBRip.DDP5.1.x264-NTb[eztv.re].srt"
@@ -63,7 +63,7 @@ func Test_failToDownloadShowSubtitles(t *testing.T) {
 		subtitle:  subtitles,
 		name:      "Vikings.S06E11.King.Of.Kings.720p.AMZN.WEBRip.DDP5.1.x264-NTb[eztv.re]",
 		extension: "srt",
-		dirPath:   DOWNLOAD_DIR_PATH,
+		dirPath:   DownloadDirPath,
 	}
 
 	expectedError := &utils.Error{"Fail to download subtitles - Unable to reach addic7ed server: Get \"www.addic7ed.com/original/-1/-1\": unsupported protocol scheme \"\""}

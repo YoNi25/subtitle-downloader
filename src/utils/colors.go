@@ -2,6 +2,7 @@ package utils
 
 import "github.com/fatih/color"
 
+// ColorsStruct Define a structure of Colors that could be used everywhere
 type ColorsStruct struct {
 	Green  *color.Color
 	Red    *color.Color
