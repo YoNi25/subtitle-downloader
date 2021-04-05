@@ -17,11 +17,11 @@ type subtitleToDownload struct {
 func downloadShowsSubtitles(subtitleToDownload subtitleToDownload) error {
 	var warnings utils.Warnings
 
-	colors.Green.Printf("📥 Download srt for %s\n", subtitleToDownload.name)
+	utils.Colors.Green.Printf("📥 Download srt for %s\n", subtitleToDownload.name)
 
 	if _, err := os.Stat(subtitleToDownload.dirPath)
 		os.IsNotExist(err) {
-		warnings = append(warnings, utils.Warning{fmt.Sprintf("Missing directory %s. Creating ...\n", subtitleToDownload.dirPath)})
+		warnings = append(warnings, utils.Warning{fmt.Sprintf("Missing directory %s. Creating ...", subtitleToDownload.dirPath)})
 		os.MkdirAll(subtitleToDownload.dirPath, 0755)
 	}
 
