@@ -4,6 +4,7 @@ import (
 	"fmt"
 	addic7ed "github.com/matcornic/addic7ed"
 	"os"
+	"utils"
 )
 
 type subtitleToDownload struct {
@@ -13,21 +14,22 @@ type subtitleToDownload struct {
 	dirPath   string
 }
 
-func downloadShowsSubtitles(subtitleToDownload subtitleToDownload) {
+func downloadShowsSubtitles(subtitleToDownload subtitleToDownload) error {
+	var warnings utils.Warnings
+
 	colors.Green.Printf("📥 Download srt for %s\n", subtitleToDownload.name)
 
 	if _, err := os.Stat(subtitleToDownload.dirPath)
 		os.IsNotExist(err) {
-		colors.Yellow.Printf("⚠️  Missing directory %s. Creating ...\n", subtitleToDownload.dirPath)
+		warnings = append(warnings, utils.Warning{fmt.Sprintf("Missing directory %s. Creating ...\n", subtitleToDownload.dirPath)})
 		os.MkdirAll(subtitleToDownload.dirPath, 0755)
 	}
 
 	subtitle := subtitleToDownload.subtitle
 	err := subtitle.DownloadTo(fmt.Sprintf("%s/%s.%s", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension))
 	if err != nil {
-		colors.Red.Printf("❌ Fail to download subtitles - %s", err)
-		os.Exit(5)
+		return &utils.Error{fmt.Sprintf("Fail to download subtitles - %s", err)}
 	}
 
-	colors.Green.Printf("🎉 Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
+	return warnings
 }

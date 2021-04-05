@@ -26,25 +26,18 @@ func ReadInputArgs() Input {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	colors.Green.Println("Indicate the show's episode name")
 	showName, err := readShowName(reader)
 	if err != nil {
 		colors.Red.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
-	colors.Green.Println("Indicate the directory path where the file should be download")
-	colors.White.Printf("[%d] - %s\n", ServerDirPath, configuration.ServerDirPath)
-	colors.White.Printf("[%d] - %s\n", DesktopDirPath, configuration.DesktopDirPath)
 	dirPathDigit, err := readDirPath(reader)
 	if err != nil {
 		colors.Red.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
-	colors.Green.Printf("Indicate the subtitles' Language\n")
-	colors.White.Printf("[%d] - French\n", French)
-	colors.White.Printf("[%d] - English\n", English)
 	language, err := readLanguage(reader)
 	if err != nil {
 		colors.Red.Printf("%s\n", err)
@@ -62,13 +55,6 @@ func ReadInputArgs() Input {
 		}
 	}
 
-	colors.Blue.Println()
-	colors.Blue.Println("---------------------SUMMARY---------------------")
-	colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, configuration.SubtitleExtension)
-	colors.Blue.Printf("Chosen Language : %s\n", input.Language)
-	colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
-	colors.Blue.Println("-------------------------------------------------")
-	colors.Green.Println("Confirm that choice ? [Yn]")
 	err = confirmInput(reader, input)
 	if err != nil {
 		colors.Red.Printf("%s\n", err)
@@ -79,6 +65,8 @@ func ReadInputArgs() Input {
 }
 
 func readShowName(reader *bufio.Reader) (string, error) {
+	colors.Green.Println("Indicate the show's episode name")
+
 	showNameInput, err := reader.ReadString('\n')
 
 	if err != nil {
@@ -89,6 +77,9 @@ func readShowName(reader *bufio.Reader) (string, error) {
 }
 
 func readDirPath(reader *bufio.Reader) (int, error) {
+	colors.Green.Println("Indicate the directory path where the file should be download")
+	colors.White.Printf("[%d] - %s\n", ServerDirPath, configuration.ServerDirPath)
+	colors.White.Printf("[%d] - %s\n", DesktopDirPath, configuration.DesktopDirPath)
 
 	dirPathInput, err := reader.ReadString('\n')
 	if err != nil {
@@ -105,6 +96,10 @@ func readDirPath(reader *bufio.Reader) (int, error) {
 }
 
 func readLanguage(reader *bufio.Reader) (int, error) {
+	colors.Green.Printf("Indicate the subtitles' Language\n")
+	colors.White.Printf("[%d] - French\n", French)
+	colors.White.Printf("[%d] - English\n", English)
+
 	languageInput, err := reader.ReadString('\n')
 
 	if err != nil {
@@ -121,6 +116,14 @@ func readLanguage(reader *bufio.Reader) (int, error) {
 }
 
 func confirmInput(reader *bufio.Reader, input Input) error {
+
+	colors.Blue.Println()
+	colors.Blue.Println("---------------------SUMMARY---------------------")
+	colors.Blue.Printf("Download %s.%s\n", input.ShowName.Fullname, configuration.SubtitleExtension)
+	colors.Blue.Printf("Chosen Language : %s\n", input.Language)
+	colors.Blue.Printf("Directory path : %s\n", input.DirPath.FullPath)
+	colors.Blue.Println("-------------------------------------------------")
+	colors.Green.Println("Confirm that choice ? [Yn]")
 
 	confirm, err := reader.ReadString('\n')
 
