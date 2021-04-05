@@ -49,4 +49,5 @@ jobs:
       - name: Run testing
         run: |
           cd src
-          go test input -v
+          go test input -v -cover
+          go test downloader -v -cover
