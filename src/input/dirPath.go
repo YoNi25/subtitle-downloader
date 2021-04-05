@@ -3,6 +3,7 @@ package input
 import (
 	"errors"
 	"fmt"
+	"utils"
 )
 
 type DirPath struct {
@@ -20,14 +21,14 @@ func buildDirPath(dirPathDigit int, showName ShowName) (DirPath, error) {
 
 	switch dirPathDigit {
 	case ServerDirPath:
-		rootPath = configuration.ServerDirPath
+		rootPath = utils.Config.ServerDirPath
 		break
 	case DesktopDirPath:
-		rootPath = configuration.DesktopDirPath
+		rootPath = utils.Config.DesktopDirPath
 		break
 	default:
-		error = errors.New(fmt.Sprintf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, configuration.ServerDirPath))
-		rootPath = configuration.ServerDirPath
+		error = errors.New(fmt.Sprintf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, utils.Config.ServerDirPath))
+		rootPath = utils.Config.ServerDirPath
 	}
 
 	showFolder := fmt.Sprintf("%s/%s", showName.TvShow, showName.Season)
