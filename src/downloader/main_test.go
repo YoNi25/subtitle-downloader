@@ -48,7 +48,8 @@ func TestMain(m *testing.M) {
 }
 
 func Test_downloadSubtitles(t *testing.T) {
-	input := input.Input{
+	sut := NewDownloader(utils.Colors)
+	subtitleToDownload := input.SubtitleToDownload{
 		ShowName: input.ShowName{
 			TvShow:   "The Falcon And The Winter Soldier",
 			Season:   "S01",
@@ -65,8 +66,8 @@ func Test_downloadSubtitles(t *testing.T) {
 		Language: "French",
 	}
 
-	expectedFilePath := DownloadDirPath +"/The Falcon And The Winter Soldier/S01/The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re].srt"
+	expectedFilePath := DownloadDirPath + "/The Falcon And The Winter Soldier/S01/The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re].srt"
 
-	DownloadSubtitles(input);
+	sut.DownloadSubtitles(subtitleToDownload);
 	assert.FileExists(t, expectedFilePath)
 }

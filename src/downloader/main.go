@@ -7,23 +7,36 @@ import (
 	"utils"
 )
 
-//DownloadSubtitles Use addic7ed client to search and download the best subtitle for the given Input
-func DownloadSubtitles(input input.Input) {
+// Downloader Structure used to instanciate properties needed to download subtitles
+type Downloader struct {
+	colors utils.ColorsStruct}
 
-	subtitle, retrieveShowErr := retrieveShow(
-		searchSubtitle{
-			name:     input.ShowName.Fullname,
-			language: input.Language,
-			version:  input.ShowName.Version,
-		})
+// NewDownloader return a new Downloader struct
+func NewDownloader(colors utils.ColorsStruct) *Downloader {
+	construct := new(Downloader)
+	construct.colors = colors
 
+	return construct
+}
+
+//DownloadSubtitles Use addic7ed client to search and download the best subtitle for the given SubtitleToDownload
+func (downloader *Downloader) DownloadSubtitles(input input.SubtitleToDownload) {
+
+	subtitleSearcher := NewSubtitleSearcher(downloader.colors)
+	subtitleDownloader := NewSubtitleDownloader(downloader.colors);
+
+	subtitle, retrieveShowErr := subtitleSearcher.retrieveShow(searchSubtitle{
+		name:     input.ShowName.Fullname,
+		language: input.Language,
+		version:  input.ShowName.Version,
+	})
 	if retrieveShowErr != nil {
 		typeOf := reflect.TypeOf(retrieveShowErr)
 		if (typeOf == reflect.TypeOf(&utils.Error{})) {
-			utils.Colors.Red.Printf("%s\n", retrieveShowErr)
+			downloader.colors.Red.Printf("%s\n", retrieveShowErr)
 			os.Exit(4)
 		} else if typeOf == reflect.TypeOf(utils.Warnings{}) {
-			utils.Colors.Yellow.Printf("%s\n", retrieveShowErr)
+			downloader.colors.Yellow.Printf("%s\n", retrieveShowErr)
 		}
 	}
 
@@ -33,18 +46,17 @@ func DownloadSubtitles(input input.Input) {
 		extension: utils.Config.SubtitleExtension,
 		dirPath:   input.DirPath.FullPath,
 	}
-
-	downloadErr := downloadShowsSubtitles(subtitleToDownload)
+	downloadErr := subtitleDownloader.downloadShowsSubtitles(subtitleToDownload)
 
 	if downloadErr != nil {
 		typeOf := reflect.TypeOf(downloadErr)
 		if (typeOf == reflect.TypeOf(&utils.Error{})) {
-			utils.Colors.Red.Printf("%s\n", downloadErr)
+			downloader.colors.Red.Printf("%s\n", downloadErr)
 			os.Exit(5)
 		} else if typeOf == reflect.TypeOf(utils.Warnings{}) {
-			utils.Colors.Yellow.Printf("%s\n", downloadErr)
+			downloader.colors.Yellow.Printf("%s\n", downloadErr)
 		}
 	}
 
-	utils.Colors.Green.Printf("🎉 Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
+	downloader.colors.Green.Printf("🎉 Subtitle %s/%s.%s downloaded\n", subtitleToDownload.dirPath, subtitleToDownload.name, subtitleToDownload.extension)
 }

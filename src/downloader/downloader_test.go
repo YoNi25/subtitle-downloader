@@ -8,6 +8,7 @@ import (
 )
 
 func Test_createMissingDirectoryAndDownloadSubtitles(t *testing.T) {
+	sut := NewSubtitleDownloader(utils.Colors)
 	subtitles := addic7ed.Subtitle{
 		"English",
 		"KOGi+Telly",
@@ -26,12 +27,14 @@ func Test_createMissingDirectoryAndDownloadSubtitles(t *testing.T) {
 		{"Missing directory ../../downloaded. Creating ..."},
 	}
 
-	err := downloadShowsSubtitles(subtitleToDownload)
+	err := sut.downloadShowsSubtitles(subtitleToDownload)
 	assert.FileExists(t, expectedFilePath)
 	assert.Equal(t, expectedErrors, err)
 }
 
 func Test_DownloadShowSubtitles(t *testing.T) {
+	sut := NewSubtitleDownloader(utils.Colors)
+
 	subtitles := addic7ed.Subtitle{
 		"English",
 		"AMZN.WEB-DL.NTb",
@@ -47,12 +50,14 @@ func Test_DownloadShowSubtitles(t *testing.T) {
 
 	expectedFilePath := "../../downloaded/Vikings.S06E11.King.Of.Kings.720p.AMZN.WEBRip.DDP5.1.x264-NTb[eztv.re].srt"
 
-	err := downloadShowsSubtitles(subtitleToDownload)
+	err := sut.downloadShowsSubtitles(subtitleToDownload)
 	assert.FileExists(t, expectedFilePath)
 	assert.Nil(t, err)
 }
 
 func Test_failToDownloadShowSubtitles(t *testing.T) {
+	sut := NewSubtitleDownloader(utils.Colors)
+
 	subtitles := addic7ed.Subtitle{
 		"English",
 		"AMZN.WEB-DL.NTb",
@@ -67,6 +72,6 @@ func Test_failToDownloadShowSubtitles(t *testing.T) {
 	}
 
 	expectedError := &utils.Error{"Fail to download subtitles - Unable to reach addic7ed server: Get \"www.addic7ed.com/original/-1/-1\": unsupported protocol scheme \"\""}
-	err := downloadShowsSubtitles(subtitleToDownload)
+	err := sut.downloadShowsSubtitles(subtitleToDownload)
 	assert.Equal(t, expectedError, err)
 }

@@ -14,10 +14,23 @@ type subtitleToDownload struct {
 	dirPath   string
 }
 
-func downloadShowsSubtitles(subtitleToDownload subtitleToDownload) error {
+// SubtitleDownloader structure to construct a SubtitleDownloader
+type SubtitleDownloader struct {
+	colors   utils.ColorsStruct
+}
+
+// NewSubtitleDownloader return a new SubtitleDownloader struct
+func NewSubtitleDownloader(colors utils.ColorsStruct) *SubtitleDownloader {
+	construct := new(SubtitleDownloader)
+	construct.colors = colors
+
+	return construct
+}
+
+func (subtitleDownloader *SubtitleDownloader) downloadShowsSubtitles(subtitleToDownload subtitleToDownload) error {
 	var warnings utils.Warnings
 
-	utils.Colors.Green.Printf("📥 Download srt for %s\n", subtitleToDownload.name)
+	subtitleDownloader.colors.Green.Printf("📥 Download srt for %s\n", subtitleToDownload.name)
 
 	if _, err := os.Stat(subtitleToDownload.dirPath)
 		os.IsNotExist(err) {

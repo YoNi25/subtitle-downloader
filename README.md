@@ -4,19 +4,31 @@ Download subtittle from Addic7ed thanks to https://github.com/matcornic/addic7ed
 ## Build
 To build sources to an executable, go to `src` directory, then run 
 
-```
+```shell
 go build -o ../bin/subtitle-downloader .
 ```
 
 ## Usage
 Go to `bin` directory, then run
 
-```
+```shell
 ./subtitle-downloader
 ```
 
-### Usage Example
+If you want to skip the optional questions (such as Language and Directory path) and use the default values defined
+on config/config.json file, you can add the flag `--fast` when you're running the command : 
+
+```shell
+./subtitle-downloader --fast
+```
+
+### Usage Examples
+
+#### Standard Usage
 ![demo](doc/screenshots/demo.gif)
+
+#### Fast Option Usage
+![demo_Fast_Option](doc/screenshots/demo_fast_option.gif)
 
 ### Warning cases
 

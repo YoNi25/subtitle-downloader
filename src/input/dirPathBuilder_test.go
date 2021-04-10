@@ -3,6 +3,7 @@ package input
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"utils"
 )
 
 func Test_buildDirPath(t *testing.T) {
@@ -21,6 +22,7 @@ func Test_buildDirPath(t *testing.T) {
 				RootPath: "/server/dir/path",
 				Folder: "A Tv Show/S02",
 				FullPath: "/server/dir/path/A Tv Show/S02",
+				Extension: "srt",
 			},
 		},
 		{
@@ -33,24 +35,29 @@ func Test_buildDirPath(t *testing.T) {
 				RootPath: "/desktop/dir/path",
 				Folder: "A Tv Show/S02",
 				FullPath: "/desktop/dir/path/A Tv Show/S02",
+				Extension: "srt",
 			},
 		},
 	}
 
+	sut := NewDirPathBuilder(utils.Config)
 	for _, test := range flagtests {
-		dirPathStruct, err := buildDirPath(test.dirPathDigit, test.ShowName)
+		dirPathStruct, err := sut.build(test.dirPathDigit, test.ShowName)
 		assert.Equal(t, test.expectedDirPathStruct, dirPathStruct)
 		assert.Empty(t, err)
 	}
 }
 
 func Test_BuildDirPathWithDefaultValue(t *testing.T) {
+	sut := NewDirPathBuilder(utils.Config)
+
 	expectedDirPathStruct := DirPath{
 		RootPath: "/server/dir/path",
 		Folder: "A Tv Show/S02",
 		FullPath: "/server/dir/path/A Tv Show/S02",
+		Extension: "srt",
 	}
-	dirPathStruct, err := buildDirPath(-1, ShowName{
+	dirPathStruct, err := sut.build(-1, ShowName{
 		TvShow: "A Tv Show",
 		Season: "S02",
 	})

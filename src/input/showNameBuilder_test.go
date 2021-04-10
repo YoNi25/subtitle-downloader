@@ -6,6 +6,7 @@ import (
 )
 
 func Test_buildShowName(t *testing.T) {
+	sut := NewShowNameBuilder()
 	flagtests := []struct {
 		showName               string
 		expectedShowNameStruct ShowName
@@ -46,14 +47,18 @@ func Test_buildShowName(t *testing.T) {
 	}
 
 	for _, test := range flagtests {
-		showNameStruct, err := buildShowName(test.showName)
+		showNameStruct, err := sut.build(test.showName)
+
 		assert.Equal(t, test.expectedShowNameStruct, showNameStruct)
 		assert.Empty(t, err)
 	}
 }
 
 func Test_InvalidShowName(t *testing.T) {
-	showNameStruct, err := buildShowName("an-invalid-show-name")
+	sut := NewShowNameBuilder()
+
+	showNameStruct, err := sut.build("an-invalid-show-name")
+
 	assert.Equal(t, ShowName{}, showNameStruct)
 	assert.Equal(t, "Unable to parse Show name 'an-invalid-show-name", err.Error())
 }
