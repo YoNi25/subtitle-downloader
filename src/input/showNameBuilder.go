@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const showNamePattern = "(?P<tvShow>.*)\\.(?P<season>S\\d+)(?P<episode>E\\d+).*-(?P<version>[^\\[]*)(\\[(?P<source>.*)\\])?"
+
 //ShowName The structure that contains all Show information
 type ShowName struct {
 	TvShow   string
@@ -16,22 +18,27 @@ type ShowName struct {
 	Fullname string
 }
 
-const showNamePattern = "(?P<tvShow>.*)\\.(?P<season>S\\d+)(?P<episode>E\\d+).*-(?P<version>[^\\[]*)(\\[(?P<source>.*)\\])?"
+// ShowNameBuilder Structure used to instanciate properties needed to build the ShowName
+type ShowNameBuilder struct {
+	showNamePattern *regexp.Regexp
+}
 
-func buildShowName(showNameStr string) (ShowName, error) {
-	showNamePattern := regexp.MustCompile(`(?i)` + showNamePattern)
+// NewShowNameBuilder return a new ShowNameBuilder structure
+func NewShowNameBuilder() *ShowNameBuilder {
+	construct := new(ShowNameBuilder)
+	construct.showNamePattern = regexp.MustCompile(`(?i)` + showNamePattern)
 
-	match := showNamePattern.FindStringSubmatch(showNameStr)
+	return construct
+}
+
+func (builder *ShowNameBuilder) build(showNameStr string) (ShowName, error) {
+
+	match := builder.showNamePattern.FindStringSubmatch(showNameStr)
 	if len(match) == 0 {
 		return ShowName{}, fmt.Errorf("Unable to parse Show name '%s", showNameStr)
 	}
 
-	result := make(map[string]string)
-	for i, name := range showNamePattern.SubexpNames() {
-		if i != 0 && name != "" {
-			result[name] = match[i]
-		}
-	}
+	result := builder.mapRegexpToNamedVariables(match)
 
 	return ShowName{
 		strings.Title(strings.ReplaceAll(result["tvShow"], ".", " ")),
@@ -41,4 +48,14 @@ func buildShowName(showNameStr string) (ShowName, error) {
 		result["source"],
 		showNameStr,
 	}, nil
+}
+
+func (builder *ShowNameBuilder) mapRegexpToNamedVariables(match []string) map[string]string {
+	result := make(map[string]string)
+	for i, name := range builder.showNamePattern.SubexpNames() {
+		if i != 0 && name != "" {
+			result[name] = match[i]
+		}
+	}
+	return result
 }
