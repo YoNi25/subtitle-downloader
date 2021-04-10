@@ -15,9 +15,11 @@ func main() {
 	initializeCommandArgs()
 
 	inputInstance := input.NewInput(utils.Colors, utils.Config, os.Stdin, useDefaultValues)
+	downloaderInstance := downloader.NewDownloader(utils.Colors)
+
 	inputs := inputInstance.ReadInputArgs()
 
-	downloader.DownloadSubtitles(inputs)
+	downloaderInstance.DownloadSubtitles(inputs)
 }
 
 func initializeCommandArgs() {
