@@ -3,6 +3,7 @@ package input
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"utils"
 )
 
 func Test_buildDirPath(t *testing.T) {
@@ -37,20 +38,23 @@ func Test_buildDirPath(t *testing.T) {
 		},
 	}
 
+	sut := NewDirPath(utils.Config)
 	for _, test := range flagtests {
-		dirPathStruct, err := buildDirPath(test.dirPathDigit, test.ShowName)
+		dirPathStruct, err := sut.buildDirPath(test.dirPathDigit, test.ShowName)
 		assert.Equal(t, test.expectedDirPathStruct, dirPathStruct)
 		assert.Empty(t, err)
 	}
 }
 
 func Test_BuildDirPathWithDefaultValue(t *testing.T) {
+	sut := NewDirPath(utils.Config)
+
 	expectedDirPathStruct := DirPath{
 		RootPath: "/server/dir/path",
 		Folder: "A Tv Show/S02",
 		FullPath: "/server/dir/path/A Tv Show/S02",
 	}
-	dirPathStruct, err := buildDirPath(-1, ShowName{
+	dirPathStruct, err := sut.buildDirPath(-1, ShowName{
 		TvShow: "A Tv Show",
 		Season: "S02",
 	})

@@ -1,13 +1,14 @@
 package input
 
 import (
-	"bufio"
 	"bytes"
 	"github.com/fatih/color"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"utils"
 )
+
+var stdin bytes.Buffer
 
 func init() {
 	utils.Colors = utils.ColorsStruct{
@@ -26,11 +27,10 @@ func init() {
 
 func Test_ReadShowName(t *testing.T) {
 	expectedShowName := "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME"
-	var stdin bytes.Buffer
 	stdin.Write([]byte("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME\n"))
-	reader := bufio.NewReader(&stdin)
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
 
-	showName, err := readShowName(reader)
+	showName, err := sut.readShowName()
 
 	assert.Equal(t, expectedShowName, showName)
 	assert.Nil(t, err)
@@ -44,12 +44,11 @@ func Test_ReadDirPath(t *testing.T) {
 		{"1\n", 1},
 		{"\n", -1},
 	}
-	var stdin bytes.Buffer
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
 
 	for _, test := range flagtests {
 		stdin.Write([]byte(test.inputDirPath))
-		reader := bufio.NewReader(&stdin)
-		languageDigit, err := readLanguage(reader)
+		languageDigit, err := sut.readLanguage()
 		assert.Equal(t, test.expectedDirPathDigit, languageDigit)
 		assert.Nil(t, err)
 	}
@@ -63,12 +62,11 @@ func Test_ReadLanguage(t *testing.T) {
 		{"1\n", 1},
 		{"\n", -1},
 	}
-	var stdin bytes.Buffer
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
 
 	for _, test := range flagtests {
 		stdin.Write([]byte(test.inputLanguage))
-		reader := bufio.NewReader(&stdin)
-		languageDigit, err := readLanguage(reader)
+		languageDigit, err := sut.readLanguage()
 		assert.Equal(t, test.expectedLanguageDigit, languageDigit)
 		assert.Nil(t, err)
 	}
@@ -84,36 +82,19 @@ func Test_ReadConfirmation(t *testing.T) {
 		{"Y\n", nil},
 		{"n\n", &utils.Error{"Confirmation failed ! Invalid answer 'n'"}},
 	}
-	showName := ShowName{
-		TvShow:   "Age Of Samurai Battle For Japan",
-		Season:   "S01",
-		Episode:  "E01",
-		Version:  "EXTREME",
-		Source:   "",
-		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
-	}
-	dirPath := DirPath{
-		RootPath: "/server/dir/path",
-		Folder:   "Age Of Samurai Battle For Japan/S01",
-		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
-	}
-	input := Input{
-		ShowName: showName,
-		DirPath:  dirPath,
-		Language: "French",
-	}
 
-	var stdin bytes.Buffer
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
 
 	for _, test := range flagtests {
 		stdin.Write([]byte(test.inputConfirmation))
-		reader := bufio.NewReader(&stdin)
-		err := confirmInput(reader, input)
+		err := sut.confirmInput()
 		assert.Equal(t, test.expectedError, err)
 	}
 }
 
-func Test_BuildInput(t *testing.T) {
+func Test_BuildSubtitleToDownload(t *testing.T) {
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
+
 	showName := ShowName{
 		TvShow:   "Age Of Samurai Battle For Japan",
 		Season:   "S01",
@@ -127,19 +108,20 @@ func Test_BuildInput(t *testing.T) {
 		Folder:   "Age Of Samurai Battle For Japan/S01",
 		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
 	}
-	expectedInput := Input{
+	expectedInput := SubtitleToDownload{
 		ShowName: showName,
 		DirPath:  dirPath,
 		Language: "French",
 	}
 
-	input, err := buildInput("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME", ServerDirPath, French)
-	assert.Equal(t, expectedInput, input)
+	subtitleToDownload, err := sut.buildSubtitleToDownload("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME", ServerDirPath, French)
+	assert.Equal(t, expectedInput, subtitleToDownload)
 	assert.Nil(t, err)
 }
 
-func Test_FailBuildInput(t *testing.T) {
-	_, err := buildInput("a-wrong-tv-show-name", ServerDirPath, French)
+func Test_FailBuildSubtitleToDownload(t *testing.T) {
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
+	_, err := sut.buildSubtitleToDownload("a-wrong-tv-show-name", ServerDirPath, French)
 	assert.Equal(t, err, &utils.Error{"Unable to parse Show name 'a-wrong-tv-show-name"})
 }
 
@@ -161,13 +143,13 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 	flagtests := []struct {
 		dirPathDigit     int
 		languageDigit    int
-		expectedInput    Input
+		expectedInput    SubtitleToDownload
 		expectedWarnings error
 	}{
 		{
 			-1,
 			French,
-			Input{
+			SubtitleToDownload{
 				ShowName: showName,
 				DirPath:  dirPath,
 				Language: "French",
@@ -177,7 +159,7 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 		{
 			ServerDirPath,
 			-1,
-			Input{
+			SubtitleToDownload{
 				ShowName: showName,
 				DirPath:  dirPath,
 				Language: "Zulu",
@@ -187,7 +169,7 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 		{
 			42,
 			42,
-			Input{
+			SubtitleToDownload{
 				ShowName: showName,
 				DirPath:  dirPath,
 				Language: "Zulu",
@@ -199,8 +181,9 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 		},
 	}
 
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
 	for _, test := range flagtests {
-		input, err := buildInput("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME", test.dirPathDigit, test.languageDigit)
+		input, err := sut.buildSubtitleToDownload("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME", test.dirPathDigit, test.languageDigit)
 		assert.Equal(t, test.expectedInput, input)
 		assert.Equal(t, test.expectedWarnings, err)
 	}
@@ -219,4 +202,96 @@ func Test_convertCRLFtoLF(t *testing.T) {
 		convertedString := convertCRLFtoLF(test.toConvert)
 		assert.Equal(t, test.expectedString, convertedString)
 	}
+}
+
+func Test_readInputs(t *testing.T) {
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
+
+	showName := ShowName{
+		TvShow:   "Age Of Samurai Battle For Japan",
+		Season:   "S01",
+		Episode:  "E01",
+		Version:  "EXTREME",
+		Source:   "",
+		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
+	}
+	dirPath := DirPath{
+		RootPath: "/server/dir/path",
+		Folder:   "Age Of Samurai Battle For Japan/S01",
+		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+	}
+	expectedInput := SubtitleToDownload{
+		ShowName: showName,
+		DirPath:  dirPath,
+		Language: "French",
+	}
+
+	stdin.Write([]byte("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME\n"))
+	stdin.Write([]byte("1\n"))
+	stdin.Write([]byte("1\n"))
+	stdin.Write([]byte("y\n"))
+
+	subtitleToDownload := sut.ReadInputArgs()
+
+	assert.Equal(t, expectedInput, subtitleToDownload)
+}
+func Test_readInputsWithEmptyValues(t *testing.T) {
+	sut := NewInput(utils.Colors, utils.Config, &stdin,false)
+
+	showName := ShowName{
+		TvShow:   "Age Of Samurai Battle For Japan",
+		Season:   "S01",
+		Episode:  "E01",
+		Version:  "EXTREME",
+		Source:   "",
+		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
+	}
+	dirPath := DirPath{
+		RootPath: "/server/dir/path",
+		Folder:   "Age Of Samurai Battle For Japan/S01",
+		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+	}
+	expectedInput := SubtitleToDownload{
+		ShowName: showName,
+		DirPath:  dirPath,
+		Language: "Zulu",
+	}
+
+	stdin.Write([]byte("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME\n"))
+	stdin.Write([]byte("\n"))
+	stdin.Write([]byte("\n"))
+	stdin.Write([]byte("\n"))
+
+	subtitleToDownload := sut.ReadInputArgs()
+
+	assert.Equal(t, expectedInput, subtitleToDownload)
+}
+
+func Test_readInputsWithUsingDefaultValues(t *testing.T) {
+	sut := NewInput(utils.Colors, utils.Config, &stdin,true)
+
+	showName := ShowName{
+		TvShow:   "Age Of Samurai Battle For Japan",
+		Season:   "S01",
+		Episode:  "E01",
+		Version:  "EXTREME",
+		Source:   "",
+		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
+	}
+	dirPath := DirPath{
+		RootPath: "/server/dir/path",
+		Folder:   "Age Of Samurai Battle For Japan/S01",
+		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+	}
+	expectedInput := SubtitleToDownload{
+		ShowName: showName,
+		DirPath:  dirPath,
+		Language: "Zulu",
+	}
+
+	stdin.Write([]byte("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME\n"))
+
+	subtitleToDownload := sut.ReadInputArgs()
+
+	assert.Equal(t, expectedInput, subtitleToDownload)
 }
