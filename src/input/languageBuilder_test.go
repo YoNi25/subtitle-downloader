@@ -7,7 +7,7 @@ import (
 )
 
 func Test_BuildLanguage(t *testing.T) {
-	sut := NewLanguage(utils.Config)
+	sut := NewLanguageBuilder(utils.Config)
 
 	flagtests := []struct {
 		languageDigit    int
@@ -18,16 +18,16 @@ func Test_BuildLanguage(t *testing.T) {
 	}
 
 	for _, test := range flagtests {
-		language, err := sut.buildLanguage(test.languageDigit)
+		language, err := sut.build(test.languageDigit)
 		assert.Equal(t, test.expectedLanguage, language)
 		assert.Nil(t, err)
 	}
 }
 
 func Test_BuildLanguageWithDefaultValue(t *testing.T) {
-	sut := NewLanguage(utils.Config)
+	sut := NewLanguageBuilder(utils.Config)
 
-	language, err := sut.buildLanguage(-1)
+	language, err := sut.build(-1)
 	assert.Equal(t, "Zulu", language)
 	assert.Equal(t, "No Language matches with -1. Using default Language - 'Zulu'", err.Error())
 }

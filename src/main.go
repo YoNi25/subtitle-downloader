@@ -14,7 +14,7 @@ func main() {
 	utils.Init()
 	initializeCommandArgs()
 
-	inputInstance := input.NewInput(utils.Colors, utils.Config, os.Stdin, useDefaultValues)
+	inputInstance := input.NewInputReader(os.Stdin, utils.Colors, utils.Config, useDefaultValues)
 	downloaderInstance := downloader.NewDownloader(utils.Colors)
 
 	inputs := inputInstance.ReadInputArgs()
