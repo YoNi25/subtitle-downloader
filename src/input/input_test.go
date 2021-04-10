@@ -22,6 +22,7 @@ func init() {
 		ServerDirPath:   "/server/dir/path",
 		DesktopDirPath:  "/desktop/dir/path",
 		DefaultLanguage: "Zulu",
+		SubtitleExtension: "srt",
 	}
 }
 
@@ -138,6 +139,7 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 		RootPath: "/server/dir/path",
 		Folder:   "Age Of Samurai Battle For Japan/S01",
 		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		Extension: "srt",
 	}
 
 	flagtests := []struct {
@@ -219,6 +221,7 @@ func Test_readInputs(t *testing.T) {
 		RootPath: "/server/dir/path",
 		Folder:   "Age Of Samurai Battle For Japan/S01",
 		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{
 		ShowName: showName,
@@ -250,6 +253,7 @@ func Test_readInputsWithEmptyValues(t *testing.T) {
 		RootPath: "/server/dir/path",
 		Folder:   "Age Of Samurai Battle For Japan/S01",
 		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{
 		ShowName: showName,
@@ -282,6 +286,7 @@ func Test_readInputsWithUsingDefaultValues(t *testing.T) {
 		RootPath: "/server/dir/path",
 		Folder:   "Age Of Samurai Battle For Japan/S01",
 		FullPath: "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{
 		ShowName: showName,

@@ -22,6 +22,7 @@ func Test_buildDirPath(t *testing.T) {
 				RootPath: "/server/dir/path",
 				Folder: "A Tv Show/S02",
 				FullPath: "/server/dir/path/A Tv Show/S02",
+				Extension: "srt",
 			},
 		},
 		{
@@ -34,6 +35,7 @@ func Test_buildDirPath(t *testing.T) {
 				RootPath: "/desktop/dir/path",
 				Folder: "A Tv Show/S02",
 				FullPath: "/desktop/dir/path/A Tv Show/S02",
+				Extension: "srt",
 			},
 		},
 	}
@@ -53,6 +55,7 @@ func Test_BuildDirPathWithDefaultValue(t *testing.T) {
 		RootPath: "/server/dir/path",
 		Folder: "A Tv Show/S02",
 		FullPath: "/server/dir/path/A Tv Show/S02",
+		Extension: "srt",
 	}
 	dirPathStruct, err := sut.buildDirPath(-1, ShowName{
 		TvShow: "A Tv Show",

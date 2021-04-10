@@ -10,6 +10,7 @@ type DirPath struct {
 	RootPath string
 	Folder   string
 	FullPath string
+	Extension string
 }
 
 // dirPath Structure used to instanciate properties needed to build a DirPath
@@ -52,5 +53,6 @@ func (dirPath *dirPath) buildDirPath(dirPathDigit int, showName ShowName) (DirPa
 		RootPath: rootPath,
 		Folder:   showFolder,
 		FullPath: fmt.Sprintf("%s/%s", rootPath, showFolder),
+		Extension: dirPath.config.SubtitleExtension,
 	}, error
 }
