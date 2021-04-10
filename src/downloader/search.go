@@ -13,19 +13,20 @@ type searchSubtitle struct {
 	version  string
 }
 
-type subtitleSearcher struct {
+// SubtitleSearcher structure to construct a SubtitleSearcher
+type SubtitleSearcher struct {
 	colors   utils.ColorsStruct
 }
 
-// NewSubtitleSearcher return a new subtitleSearcher struct
-func NewSubtitleSearcher(colors utils.ColorsStruct) *subtitleSearcher {
-	construct := new(subtitleSearcher)
+// NewSubtitleSearcher return a new SubtitleSearcher struct
+func NewSubtitleSearcher(colors utils.ColorsStruct) *SubtitleSearcher {
+	construct := new(SubtitleSearcher)
 	construct.colors = colors
 
 	return construct
 }
 
-func (subtitleSearch *subtitleSearcher) retrieveShow(searchSubtitle searchSubtitle) (addic7ed.Subtitle, error) {
+func (subtitleSearch *SubtitleSearcher) retrieveShow(searchSubtitle searchSubtitle) (addic7ed.Subtitle, error) {
 	subtitleSearch.colors.Blue.Printf("\nLooking For subtitles for '%s'\n", searchSubtitle.name)
 	subtitleSearch.colors.Blue.Printf("The process could take some time\n\n")
 

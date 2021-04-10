@@ -7,20 +7,20 @@ import (
 	"utils"
 )
 
-// downloader Structure used to instanciate properties needed to download subtitles
-type downloader struct {
+// Downloader Structure used to instanciate properties needed to download subtitles
+type Downloader struct {
 	colors utils.ColorsStruct}
 
-// NewInput return a new downloader struct
-func NewDownloader(colors utils.ColorsStruct) *downloader {
-	construct := new(downloader)
+// NewDownloader return a new Downloader struct
+func NewDownloader(colors utils.ColorsStruct) *Downloader {
+	construct := new(Downloader)
 	construct.colors = colors
 
 	return construct
 }
 
 //DownloadSubtitles Use addic7ed client to search and download the best subtitle for the given SubtitleToDownload
-func (downloader *downloader) DownloadSubtitles(input input.SubtitleToDownload) {
+func (downloader *Downloader) DownloadSubtitles(input input.SubtitleToDownload) {
 
 	subtitleSearcher := NewSubtitleSearcher(downloader.colors)
 	subtitleDownloader := NewSubtitleDownloader(downloader.colors);
