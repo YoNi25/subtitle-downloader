@@ -1,6 +1,15 @@
 # subtitle-downloader
 Download subtittle from Addic7ed thanks to https://github.com/matcornic/addic7ed
 
+## Installment 
+First, copy the `config/config.json.dist` file to `config/config.development.json`
+
+```shell
+cp config/config.json.dist config/config.development.json
+```
+
+Then you could set your own default values for Language, serverDirPath, DesktopDirPath etc...
+
 ## Build
 To build sources to an executable, go to `src` directory, then run 
 

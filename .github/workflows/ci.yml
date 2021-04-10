@@ -35,6 +35,7 @@ jobs:
       # Run build of the application
       - name: Run build
         run: |
+          cp config/config.json.dist config/config.development.json
           cd src
           go build .
 

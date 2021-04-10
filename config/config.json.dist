@@ -1,0 +1,6 @@
+{
+  "ServerDirPath": "/a/server/dir/path",
+  "DesktopDirPath": "/a/locale/dir/path",
+  "DefaultLanguage": "French",
+  "SubtitleExtension" : "srt"
+}
