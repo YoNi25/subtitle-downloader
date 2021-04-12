@@ -1,6 +1,18 @@
 {
-  "ServerDirPath": "/a/server/dir/path",
-  "DesktopDirPath": "/a/locale/dir/path",
-  "DefaultLanguage": "French",
-  "SubtitleExtension" : "srt"
+  "DirPaths": {
+    "Available": {
+      "Server": "/a/server/dir/path",
+      "Desktop": "/a/desktop/dir/path",
+      "Current": "."
+    },
+    "Default": "/a/server/dir/path"
+  },
+  "Languages": {
+    "Available": {
+      "French": "French",
+      "English": "English"
+    },
+    "Default": "French"
+  },
+  "SubtitleExtension": "srt"
 }
