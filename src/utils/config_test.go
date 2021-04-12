@@ -11,10 +11,10 @@ func Test_initializeConfig(t *testing.T) {
 		DirPathsConfig: DirPathsConfig{
 			Available: map[string]string{
 				"Server":  "/a/server/dir/path",
-				"Desktop": "/a/desktop/dir/path",
+				"Desktop": "../../downloaded",
 				"Current": ".",
 			},
-			Default: "/a/server/dir/path",
+			Default: "../../downloaded",
 		},
 		LanguagesConfig: LanguagesConfig{
 			Available: map[string]string{

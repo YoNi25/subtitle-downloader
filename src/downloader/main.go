@@ -23,7 +23,7 @@ func NewDownloader(colors utils.ColorsStruct) *Downloader {
 func (downloader *Downloader) DownloadSubtitles(input input.SubtitleToDownload) {
 
 	subtitleSearcher := NewSubtitleSearcher(downloader.colors)
-	subtitleDownloader := NewSubtitleDownloader(downloader.colors);
+	subtitleDownloader := NewSubtitleDownloader(downloader.colors)
 
 	subtitle, retrieveShowErr := subtitleSearcher.retrieveShow(searchSubtitle{
 		name:     input.ShowName.Fullname,
@@ -43,7 +43,7 @@ func (downloader *Downloader) DownloadSubtitles(input input.SubtitleToDownload) 
 	subtitleToDownload := subtitleToDownload{
 		subtitle:  subtitle,
 		name:      input.ShowName.Fullname,
-		extension: utils.Config.SubtitleExtension,
+		extension: input.DirPath.Extension,
 		dirPath:   input.DirPath.FullPath,
 	}
 	downloadErr := subtitleDownloader.downloadShowsSubtitles(subtitleToDownload)
