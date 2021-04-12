@@ -1,0 +1,18 @@
+{
+  "DirPaths": {
+    "Available": {
+      "Server": "/a/server/dir/path",
+      "Desktop": "../../downloaded",
+      "Current": "."
+    },
+    "Default": "../../downloaded"
+  },
+  "Languages": {
+    "Available": {
+      "French": "French",
+      "English": "English"
+    },
+    "Default": "French"
+  },
+  "SubtitleExtension": "srt"
+}
