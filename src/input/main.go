@@ -6,13 +6,11 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"utils"
 )
-
-const defaultDirPathValue int = -1
-const defaultLanguageValue int = -1
 
 // SubtitleToDownload Structure that contains structured information needed to download subtitles
 type SubtitleToDownload struct {
@@ -27,6 +25,9 @@ type Reader struct {
 	config           utils.Configuration
 	reader           *bufio.Reader
 	useDefaultValues bool
+	showNameBuilder  *ShowNameBuilder
+	dirPathBuilder   *DirPathBuilder
+	languageBuilder  *LanguageBuilder
 }
 
 // NewInputReader return a new Reader struct
@@ -36,6 +37,9 @@ func NewInputReader(readBuffer io.Reader, colors utils.ColorsStruct, config util
 	construct.colors = colors
 	construct.config = config
 	construct.useDefaultValues = useDefaultValues
+	construct.showNameBuilder = NewShowNameBuilder()
+	construct.dirPathBuilder = NewDirPathBuilder(config.DirPathsConfig, config.SubtitleExtension)
+	construct.languageBuilder = NewLanguageBuilder(config.LanguagesConfig)
 
 	return construct
 }
@@ -44,26 +48,21 @@ func NewInputReader(readBuffer io.Reader, colors utils.ColorsStruct, config util
 func (i *Reader) ReadInputArgs() SubtitleToDownload {
 
 	showName, err := i.readShowName()
+	var dirPathDigit = defaultDirPathValue
+	var languageDigit = defaultLanguageValue
+
 	if err != nil {
 		i.colors.Red.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
-	var dirPathDigit int
-	if i.useDefaultValues == true {
-		dirPathDigit = i.useDefaultDirPathValue()
-	} else {
+	if i.useDefaultValues != true {
 		dirPathDigit, err = i.readDirPath()
 		if err != nil {
 			i.colors.Red.Printf("%s\n", err)
 			os.Exit(1)
 		}
-	}
 
-	var languageDigit int
-	if i.useDefaultValues == true {
-		languageDigit = i.useDefaultLanguageValue()
-	} else {
 		languageDigit, err = i.readLanguage()
 		if err != nil {
 			i.colors.Red.Printf("%s\n", err)
@@ -108,8 +107,10 @@ func (i *Reader) readShowName() (string, error) {
 
 func (i *Reader) readDirPath() (int, error) {
 	i.colors.Green.Println("Indicate the directory path where the file should be download")
-	i.colors.White.Printf("[%d] - %s\n", ServerDirPath, i.config.ServerDirPath)
-	i.colors.White.Printf("[%d] - %s\n", DesktopDirPath, i.config.DesktopDirPath)
+
+	for key, value := range i.dirPathBuilder.GetSortedMapping() {
+		i.colors.White.Printf("[%d] - %s\n", key, value)
+	}
 
 	dirPathInput, err := i.reader.ReadString('\n')
 	if err != nil {
@@ -118,7 +119,7 @@ func (i *Reader) readDirPath() (int, error) {
 
 	dirPathInput = convertCRLFtoLF(dirPathInput)
 	if len(dirPathInput) == 0 {
-		return i.useDefaultDirPathValue(), nil
+		return defaultDirPathValue, nil
 	}
 
 	dirPathDigit, _ := strconv.Atoi(dirPathInput)
@@ -127,8 +128,9 @@ func (i *Reader) readDirPath() (int, error) {
 
 func (i *Reader) readLanguage() (int, error) {
 	i.colors.Green.Printf("Indicate the subtitles' Language\n")
-	i.colors.White.Printf("[%d] - French\n", French)
-	i.colors.White.Printf("[%d] - English\n", English)
+	for key, value := range i.languageBuilder.GetSortedMapping()  {
+		i.colors.White.Printf("[%d] - %s\n", key, value)
+	}
 
 	languageInput, err := i.reader.ReadString('\n')
 
@@ -138,7 +140,7 @@ func (i *Reader) readLanguage() (int, error) {
 
 	languageInput = convertCRLFtoLF(languageInput)
 	if len(languageInput) == 0 {
-		return i.useDefaultLanguageValue(), nil
+		return defaultLanguageValue, nil
 	}
 
 	languageDigit, _ := strconv.Atoi(languageInput)
@@ -177,24 +179,19 @@ func convertCRLFtoLF(toConvert string) string {
 
 func (i *Reader) buildSubtitleToDownload(showName string, dirPathDigit int, languageDigit int) (SubtitleToDownload, error) {
 
-	showNameBuilder := NewShowNameBuilder();
-	dirPathBuilder := NewDirPathBuilder(i.config)
-	languageBuilder := NewLanguageBuilder(i.config)
-
-
-	showNameStruct, showNameError := showNameBuilder.build(showName)
+	showNameStruct, showNameError := i.showNameBuilder.build(showName)
 	var warnings utils.Warnings
 
 	if showNameError != nil {
 		return SubtitleToDownload{}, &utils.Error{showNameError.Error()}
 	}
 
-	dirPathStruct, dirPathError := dirPathBuilder.build(dirPathDigit, showNameStruct)
+	dirPathStruct, dirPathError := i.dirPathBuilder.build(dirPathDigit, showNameStruct)
 	if dirPathError != nil {
 		warnings = append(warnings, utils.Warning{dirPathError.Error()})
 	}
 
-	languageString, languageError := languageBuilder.build(languageDigit)
+	languageString, languageError := i.languageBuilder.build(languageDigit)
 	if languageError != nil {
 		warnings = append(warnings, utils.Warning{languageError.Error()})
 	}
@@ -206,9 +203,18 @@ func (i *Reader) buildSubtitleToDownload(showName string, dirPathDigit int, lang
 	}, warnings
 }
 
-func (i *Reader) useDefaultDirPathValue() int{
-	return defaultDirPathValue;
-}
-func (i *Reader) useDefaultLanguageValue() int {
-	return defaultLanguageValue
+func convertAndSortMapping(mapping map[string]string) map[int]string {
+	sortedMapping := make(map[int]string)
+
+	keys := make([]string, 0, len(mapping))
+	for k := range mapping {
+		keys = append(keys, k)
+	}
+	i := 0
+	sort.Strings(keys)
+	for _, element := range keys {
+		i += 1
+		sortedMapping[i] = mapping[element]
+	}
+	return sortedMapping
 }
