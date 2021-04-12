@@ -1,3 +1,5 @@
+// +build all packageCommand
+
 package command
 
 import (

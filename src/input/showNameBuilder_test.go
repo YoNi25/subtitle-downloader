@@ -1,3 +1,5 @@
+// +build all packageInput builder showName
+
 package input
 
 import (

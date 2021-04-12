@@ -52,3 +52,5 @@ jobs:
           cd src
           go test input -v -cover
           go test downloader -v -cover
+          go test utils -v -cover
+          go test command -v -cover

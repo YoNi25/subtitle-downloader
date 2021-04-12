@@ -1,3 +1,5 @@
+// +build all packageInput builder
+
 package input
 
 import (

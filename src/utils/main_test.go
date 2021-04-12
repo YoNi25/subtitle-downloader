@@ -1,3 +1,5 @@
+// +build all packageUtils
+
 package utils
 
 import (

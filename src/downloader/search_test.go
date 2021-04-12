@@ -1,3 +1,5 @@
+// +build all packageDownloader searcher
+
 package downloader
 
 import (
