@@ -64,6 +64,7 @@ func Test_downloadSubtitles(t *testing.T) {
 			RootPath: DownloadDirPath,
 			Folder:   "The Falcon And The Winter Soldier/S01",
 			FullPath: DownloadDirPath +"/The Falcon And The Winter Soldier/S01",
+			Extension: "srt",
 		},
 		Language: "French",
 	}
