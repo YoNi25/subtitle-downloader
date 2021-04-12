@@ -10,15 +10,16 @@ import (
 
 var useDefaultValues bool
 
-type subtitleDownloader struct {
+//SubtitleDownloader Define the main structure command
+type SubtitleDownloader struct {
 	reader io.Reader
 	colors utils.ColorsStruct
 	config utils.Configuration
 }
 
 //NewSubtitleDownloader Instantiate the Main class SubtitleDownloader
-func NewSubtitleDownloader(reader io.Reader) *subtitleDownloader {
-	construct := new(subtitleDownloader)
+func NewSubtitleDownloader(reader io.Reader) *SubtitleDownloader {
+	construct := new(SubtitleDownloader)
 	construct.reader = reader
 	construct.colors = utils.NewColors()
 	construct.config = utils.NewConfig()
@@ -27,7 +28,7 @@ func NewSubtitleDownloader(reader io.Reader) *subtitleDownloader {
 }
 
 //Execute Ask questions to user and download corresponding subtitle
-func (sd *subtitleDownloader) Execute() {
+func (sd *SubtitleDownloader) Execute() {
 
 	initializeCommandArgs()
 

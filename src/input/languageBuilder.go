@@ -38,6 +38,7 @@ func (builder *LanguageBuilder) build(languageDigit int) (string, error) {
 	return language, error
 }
 
+// GetSortedMapping Sort the Languages' mapping by numeric
 func (builder *LanguageBuilder) GetSortedMapping()map[int]string {
 	sortedMapping := make(map[int]string)
 

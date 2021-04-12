@@ -210,11 +210,11 @@ func convertAndSortMapping(mapping map[string]string) map[int]string {
 	for k := range mapping {
 		keys = append(keys, k)
 	}
-	i := 0
+	i := 1
 	sort.Strings(keys)
 	for _, element := range keys {
-		i += 1
 		sortedMapping[i] = mapping[element]
+		i++
 	}
 	return sortedMapping
 }

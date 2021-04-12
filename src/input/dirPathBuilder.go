@@ -53,6 +53,7 @@ func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPa
 	}, error
 }
 
+// GetSortedMapping Sort the DirPaths' mapping by numeric
 func (builder *DirPathBuilder) GetSortedMapping()map[int]string {
 	sortedMapping := make(map[int]string)
 
