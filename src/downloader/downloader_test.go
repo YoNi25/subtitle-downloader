@@ -1,3 +1,5 @@
+// +build all packageDownloader downloader
+
 package downloader
 
 import (

@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"github.com/tkanos/gonfig"
 	"os"
 	"path"
@@ -10,20 +9,34 @@ import (
 	"strings"
 )
 
+// DirPathsConfig Define a structure for the DirPaths configurations
+// Available contains all paths that could be used to download a subtitle
+// Default is the default path to use
+type DirPathsConfig struct {
+	Available map[string]string `json:"Available"`
+	Default string `json:"Default"`
+}
+
+// LanguagesConfig Define a structure for the Language configurations
+// Available contains all languages that could be used to download a subtitle
+// Default is the default language to use
+type LanguagesConfig struct {
+	Available map[string]string `json:"Available"`
+	Default string `json:"Default"`
+}
+
 // Configuration Define a structure for the configuration that could be used everywhere
 type Configuration struct {
-	ServerDirPath  string
-	DesktopDirPath string
-	DefaultLanguage string
-	SubtitleExtension string
+	DirPathsConfig    DirPathsConfig  `json:"DirPaths"`
+	LanguagesConfig   LanguagesConfig `json:"Languages"`
+	SubtitleExtension string          `json:"SubtitleExtension"`
 }
 
 func initializeConfig() Configuration {
 	configuration := Configuration{}
 	err := gonfig.GetConf(getConfigFileName(), &configuration)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(500)
+		panic(err)
 	}
 
 	return configuration

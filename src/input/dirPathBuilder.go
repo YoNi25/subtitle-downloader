@@ -2,14 +2,11 @@ package input
 
 import (
 	"fmt"
+	"sort"
 	"utils"
 )
 
-// ServerDirPath const used on the prompt to display the option value
-const ServerDirPath = 1
-
-// DesktopDirPath const used on the prompt to display the option value
-const DesktopDirPath = 2
+const defaultDirPathValue int = -1
 
 //DirPath The structure that contains all information needed to download a subtitle
 type DirPath struct {
@@ -19,33 +16,31 @@ type DirPath struct {
 	Extension string
 }
 
-// DirPathBuilder Structure used to instanciate properties needed to build a DirPath
+// DirPathBuilder Structure used to instantiate properties needed to build a DirPath
 type DirPathBuilder struct {
-	config utils.Configuration
+	defaultDirPath string
+	subtitleExtension string
+	mapping map[int]string
 }
 
 // NewDirPathBuilder return a new DirPathBuilder structure
-func NewDirPathBuilder(config utils.Configuration) *DirPathBuilder {
+func NewDirPathBuilder(config utils.DirPathsConfig, subtitleExtension string) *DirPathBuilder {
 	construct := new(DirPathBuilder)
-	construct.config = config
+
+	construct.defaultDirPath = config.Default
+	construct.subtitleExtension = subtitleExtension
+	construct.mapping = convertAndSortMapping(config.Available)
 
 	return construct
 }
 
 func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPath, error) {
-	var rootPath string
 	var error error
 
-	switch dirPathDigit {
-	case ServerDirPath:
-		rootPath = builder.config.ServerDirPath
-		break
-	case DesktopDirPath:
-		rootPath = builder.config.DesktopDirPath
-		break
-	default:
-		error = fmt.Errorf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, utils.Config.ServerDirPath)
-		rootPath = builder.config.ServerDirPath
+	rootPath, ok := builder.mapping[dirPathDigit]
+	if !ok {
+		error = fmt.Errorf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, builder.defaultDirPath)
+		rootPath = builder.defaultDirPath
 	}
 
 	showFolder := fmt.Sprintf("%s/%s", showName.TvShow, showName.Season)
@@ -54,6 +49,22 @@ func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPa
 		RootPath:  rootPath,
 		Folder:    showFolder,
 		FullPath:  fmt.Sprintf("%s/%s", rootPath, showFolder),
-		Extension: builder.config.SubtitleExtension,
+		Extension: builder.subtitleExtension,
 	}, error
+}
+
+// GetSortedMapping Sort the DirPaths' mapping by numeric
+func (builder *DirPathBuilder) GetSortedMapping()map[int]string {
+	sortedMapping := make(map[int]string)
+
+	keys := make([]int, 0, len(builder.mapping))
+	for k := range builder.mapping {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+
+	for _, element := range keys {
+		sortedMapping[element] = builder.mapping[element]
+	}
+	return sortedMapping
 }

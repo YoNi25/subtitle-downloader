@@ -2,10 +2,10 @@
   "DirPaths": {
     "Available": {
       "Server": "/a/server/dir/path",
-      "Desktop": "/a/desktop/dir/path",
+      "Desktop": "../../downloaded",
       "Current": "."
     },
-    "Default": "/a/server/dir/path"
+    "Default": "../../downloaded"
   },
   "Languages": {
     "Available": {

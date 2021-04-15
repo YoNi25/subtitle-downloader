@@ -1,3 +1,5 @@
+// +build all packageInput builder
+
 package input
 
 import (
@@ -10,6 +12,13 @@ import (
 
 var stdin bytes.Buffer
 
+const currentDirPath = 1
+const desktopDirPath = 2
+const serverDirPath = 3
+
+const english = 1
+const french = 2
+
 func init() {
 	utils.Colors = utils.ColorsStruct{
 		Green:  color.New(),
@@ -19,9 +28,21 @@ func init() {
 		Blue:   color.New(),
 	}
 	utils.Config = utils.Configuration{
-		ServerDirPath:     "/server/dir/path",
-		DesktopDirPath:    "/desktop/dir/path",
-		DefaultLanguage:   "Zulu",
+		DirPathsConfig: utils.DirPathsConfig{
+			Available: map[string]string{
+				"Server":  "/a/server/dir/path",
+				"Desktop": "/a/desktop/dir/path",
+				"Current": ".",
+			},
+			Default: "/a/server/dir/path",
+		},
+		LanguagesConfig: utils.LanguagesConfig{
+			Available: map[string]string{
+				"French":  "French",
+				"English": "English",
+			},
+			Default: "Zulu",
+		},
 		SubtitleExtension: "srt",
 	}
 }
@@ -109,9 +130,9 @@ func Test_BuildSubtitleToDownload(t *testing.T) {
 		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
 	}
 	dirPath := DirPath{
-		RootPath:  "/server/dir/path",
+		RootPath:  "/a/server/dir/path",
 		Folder:    "Age Of Samurai Battle For Japan/S01",
-		FullPath:  "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		FullPath:  "/a/server/dir/path/Age Of Samurai Battle For Japan/S01",
 		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{
@@ -120,7 +141,7 @@ func Test_BuildSubtitleToDownload(t *testing.T) {
 		Language: "French",
 	}
 
-	subtitleToDownload, err := sut.buildSubtitleToDownload("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME", ServerDirPath, French)
+	subtitleToDownload, err := sut.buildSubtitleToDownload("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME", serverDirPath, french)
 
 	assert.Equal(t, expectedInput, subtitleToDownload)
 	assert.Nil(t, err)
@@ -128,7 +149,7 @@ func Test_BuildSubtitleToDownload(t *testing.T) {
 
 func Test_FailBuildSubtitleToDownload(t *testing.T) {
 	sut := NewInputReader(&stdin, utils.Colors, utils.Config, false)
-	_, err := sut.buildSubtitleToDownload("a-wrong-tv-show-name", ServerDirPath, French)
+	_, err := sut.buildSubtitleToDownload("a-wrong-tv-show-name", serverDirPath, french)
 
 	assert.Equal(t, err, &utils.Error{"Unable to parse Show name 'a-wrong-tv-show-name"})
 }
@@ -145,9 +166,9 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
 	}
 	dirPath := DirPath{
-		RootPath:  "/server/dir/path",
+		RootPath:  "/a/server/dir/path",
 		Folder:    "Age Of Samurai Battle For Japan/S01",
-		FullPath:  "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		FullPath:  "/a/server/dir/path/Age Of Samurai Battle For Japan/S01",
 		Extension: "srt",
 	}
 
@@ -159,16 +180,16 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 	}{
 		{
 			-1,
-			French,
+			french,
 			SubtitleToDownload{
 				ShowName: showName,
 				DirPath:  dirPath,
 				Language: "French",
 			},
-			utils.Warnings{{"No DirPath matches with -1. Using default DirPath - '/server/dir/path'"}},
+			utils.Warnings{{"No DirPath matches with -1. Using default DirPath - '/a/server/dir/path'"}},
 		},
 		{
-			ServerDirPath,
+			serverDirPath,
 			-1,
 			SubtitleToDownload{
 				ShowName: showName,
@@ -186,7 +207,7 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 				Language: "Zulu",
 			},
 			utils.Warnings{
-				{"No DirPath matches with 42. Using default DirPath - '/server/dir/path'"},
+				{"No DirPath matches with 42. Using default DirPath - '/a/server/dir/path'"},
 				{"No Language matches with 42. Using default Language - 'Zulu'"},
 			},
 		},
@@ -228,9 +249,9 @@ func Test_readInputs(t *testing.T) {
 		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
 	}
 	dirPath := DirPath{
-		RootPath:  "/server/dir/path",
+		RootPath:  "/a/server/dir/path",
 		Folder:    "Age Of Samurai Battle For Japan/S01",
-		FullPath:  "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		FullPath:  "/a/server/dir/path/Age Of Samurai Battle For Japan/S01",
 		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{
@@ -240,8 +261,8 @@ func Test_readInputs(t *testing.T) {
 	}
 
 	stdin.Write([]byte("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME\n"))
-	stdin.Write([]byte("1\n"))
-	stdin.Write([]byte("1\n"))
+	stdin.Write([]byte("3\n"))
+	stdin.Write([]byte("2\n"))
 	stdin.Write([]byte("y\n"))
 
 	subtitleToDownload := sut.ReadInputArgs()
@@ -260,9 +281,9 @@ func Test_readInputsWithEmptyValues(t *testing.T) {
 		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
 	}
 	dirPath := DirPath{
-		RootPath:  "/server/dir/path",
+		RootPath:  "/a/server/dir/path",
 		Folder:    "Age Of Samurai Battle For Japan/S01",
-		FullPath:  "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		FullPath:  "/a/server/dir/path/Age Of Samurai Battle For Japan/S01",
 		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{
@@ -293,9 +314,9 @@ func Test_readInputsWithUsingDefaultValues(t *testing.T) {
 		Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
 	}
 	dirPath := DirPath{
-		RootPath:  "/server/dir/path",
+		RootPath:  "/a/server/dir/path",
 		Folder:    "Age Of Samurai Battle For Japan/S01",
-		FullPath:  "/server/dir/path/Age Of Samurai Battle For Japan/S01",
+		FullPath:  "/a/server/dir/path/Age Of Samurai Battle For Japan/S01",
 		Extension: "srt",
 	}
 	expectedInput := SubtitleToDownload{

@@ -1,3 +1,5 @@
+// +build all packageInput builder dirPath
+
 package input
 
 import (
@@ -13,34 +15,46 @@ func Test_buildDirPath(t *testing.T) {
 		expectedDirPathStruct DirPath
 	}{
 		{
-			1,
+			currentDirPath,
 			ShowName{
 				TvShow: "A Tv Show",
 				Season: "S02",
 			},
 			DirPath{
-				RootPath: "/server/dir/path",
+				RootPath: ".",
 				Folder: "A Tv Show/S02",
-				FullPath: "/server/dir/path/A Tv Show/S02",
+				FullPath: "./A Tv Show/S02",
 				Extension: "srt",
 			},
 		},
 		{
-			2,
+			desktopDirPath,
 			ShowName{
 				TvShow: "A Tv Show",
 				Season: "S02",
 			},
 			DirPath{
-				RootPath: "/desktop/dir/path",
+				RootPath: "/a/desktop/dir/path",
 				Folder: "A Tv Show/S02",
-				FullPath: "/desktop/dir/path/A Tv Show/S02",
+				FullPath: "/a/desktop/dir/path/A Tv Show/S02",
+				Extension: "srt",
+			},
+		},{
+			serverDirPath,
+			ShowName{
+				TvShow: "A Tv Show",
+				Season: "S02",
+			},
+			DirPath{
+				RootPath: "/a/server/dir/path",
+				Folder: "A Tv Show/S02",
+				FullPath: "/a/server/dir/path/A Tv Show/S02",
 				Extension: "srt",
 			},
 		},
 	}
 
-	sut := NewDirPathBuilder(utils.Config)
+	sut := NewDirPathBuilder(utils.Config.DirPathsConfig, utils.Config.SubtitleExtension)
 	for _, test := range flagtests {
 		dirPathStruct, err := sut.build(test.dirPathDigit, test.ShowName)
 		assert.Equal(t, test.expectedDirPathStruct, dirPathStruct)
@@ -49,12 +63,12 @@ func Test_buildDirPath(t *testing.T) {
 }
 
 func Test_BuildDirPathWithDefaultValue(t *testing.T) {
-	sut := NewDirPathBuilder(utils.Config)
+	sut := NewDirPathBuilder(utils.Config.DirPathsConfig, utils.Config.SubtitleExtension)
 
 	expectedDirPathStruct := DirPath{
-		RootPath: "/server/dir/path",
+		RootPath: "/a/server/dir/path",
 		Folder: "A Tv Show/S02",
-		FullPath: "/server/dir/path/A Tv Show/S02",
+		FullPath: "/a/server/dir/path/A Tv Show/S02",
 		Extension: "srt",
 	}
 	dirPathStruct, err := sut.build(-1, ShowName{
@@ -62,5 +76,5 @@ func Test_BuildDirPathWithDefaultValue(t *testing.T) {
 		Season: "S02",
 	})
 	assert.Equal(t, expectedDirPathStruct, dirPathStruct)
-	assert.Equal(t, "No DirPath matches with -1. Using default DirPath - '/server/dir/path'", err.Error())
+	assert.Equal(t, "No DirPath matches with -1. Using default DirPath - '/a/server/dir/path'", err.Error())
 }

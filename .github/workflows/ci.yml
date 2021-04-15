@@ -50,5 +50,7 @@ jobs:
       - name: Run testing
         run: |
           cd src
-          go test input -v -cover
-          go test downloader -v -cover
+          go test input --tags="all" -v -cover
+          go test downloader --tags="all" -v -cover
+          go test utils --tags="all" -v -cover
+          go test command --tags="all" -v -cover
