@@ -2,7 +2,6 @@ package input
 
 import (
 	"fmt"
-	"sort"
 	"utils"
 )
 
@@ -36,20 +35,4 @@ func (builder *LanguageBuilder) build(languageDigit int) (string, error) {
 	}
 
 	return language, error
-}
-
-// GetSortedMapping Sort the Languages' mapping by numeric
-func (builder *LanguageBuilder) GetSortedMapping()map[int]string {
-	sortedMapping := make(map[int]string)
-
-	keys := make([]int, 0, len(builder.mapping))
-	for k := range builder.mapping {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
-
-	for _, element := range keys {
-		sortedMapping[element] = builder.mapping[element]
-	}
-	return sortedMapping
 }

@@ -2,7 +2,6 @@ package input
 
 import (
 	"fmt"
-	"sort"
 	"utils"
 )
 
@@ -51,20 +50,4 @@ func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPa
 		FullPath:  fmt.Sprintf("%s/%s", rootPath, showFolder),
 		Extension: builder.subtitleExtension,
 	}, error
-}
-
-// GetSortedMapping Sort the DirPaths' mapping by numeric
-func (builder *DirPathBuilder) GetSortedMapping()map[int]string {
-	sortedMapping := make(map[int]string)
-
-	keys := make([]int, 0, len(builder.mapping))
-	for k := range builder.mapping {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
-
-	for _, element := range keys {
-		sortedMapping[element] = builder.mapping[element]
-	}
-	return sortedMapping
 }
