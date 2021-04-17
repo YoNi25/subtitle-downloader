@@ -36,21 +36,15 @@ jobs:
       - name: Run build
         run: |
           cp config/config.json.dist config/config.development.json
-          cd src
-          go build .
+          make build
 
       # Run vet & lint on the code
       - name: Run vet & lint
         run: |
-          cd src
-          go vet .
-          golint ./...
-
+          make vet
+          make lint
+          
       # Run testing on the code
       - name: Run testing
         run: |
-          cd src
-          go test input --tags="all" -v -cover
-          go test downloader --tags="all" -v -cover
-          go test utils --tags="all" -v -cover
-          go test command --tags="all" -v -cover
+          make tests
