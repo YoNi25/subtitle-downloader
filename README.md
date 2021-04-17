@@ -1,34 +1,48 @@
 # subtitle-downloader
 Download subtittle from Addic7ed thanks to https://github.com/matcornic/addic7ed
 
-## Installment 
-First, copy the `config/config.json.dist` file to `config/config.development.json`
+## Quick start 
+You could use the executable by using the command 
 
 ```shell
-cp config/config.json.dist config/config.development.json
+make execute
+```
+This command is going to init, build, then execute the project. 
+You'll have more details about each step bellow.
+
+## Installment 
+### Initialize the config file structure
+First, You've to initialize the project. To do so, just run
+
+```shell
+make init
 ```
 
-Then you could set your own default values for Language, serverDirPath, DesktopDirPath etc...
+Then you could set your own default values for the project' settings : 
+* Language
+* serverDirPath
+* DesktopDirPath 
+* etc...
 
-## Build
+### Build the executable
 To build sources to an executable, go to `src` directory, then run 
 
 ```shell
-go build -o ../bin/subtitle-downloader .
+make build
 ```
 
 ## Usage
-Go to `bin` directory, then run
+Just run then run
 
 ```shell
-./subtitle-downloader
+make execute
 ```
 
 If you want to skip the optional questions (such as Language and Directory path) and use the default values defined
 on config/config.json file, you can add the flag `--fast` when you're running the command : 
 
 ```shell
-./subtitle-downloader --fast
+make execute OPT='--fast'
 ```
 
 ### Usage Examples
