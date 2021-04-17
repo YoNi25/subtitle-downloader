@@ -9,7 +9,8 @@ import (
 
 // Downloader Structure used to instanciate properties needed to download subtitles
 type Downloader struct {
-	colors utils.ColorsStruct}
+	colors utils.ColorsStruct
+}
 
 // NewDownloader return a new Downloader struct
 func NewDownloader(colors utils.ColorsStruct) *Downloader {

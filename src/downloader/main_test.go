@@ -61,9 +61,9 @@ func Test_downloadSubtitles(t *testing.T) {
 			Fullname: "The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re]",
 		},
 		DirPath: input.DirPath{
-			RootPath: DownloadDirPath,
-			Folder:   "The Falcon And The Winter Soldier/S01",
-			FullPath: DownloadDirPath +"/The Falcon And The Winter Soldier/S01",
+			RootPath:  DownloadDirPath,
+			Folder:    "The Falcon And The Winter Soldier/S01",
+			FullPath:  DownloadDirPath + "/The Falcon And The Winter Soldier/S01",
 			Extension: "srt",
 		},
 		Language: "French",
@@ -71,6 +71,6 @@ func Test_downloadSubtitles(t *testing.T) {
 
 	expectedFilePath := DownloadDirPath + "/The Falcon And The Winter Soldier/S01/The.Falcon.and.The.Winter.Soldier.S01E02.720p.WEB.h264-KOGi[eztv.re].srt"
 
-	sut.DownloadSubtitles(subtitleToDownload);
+	sut.DownloadSubtitles(subtitleToDownload)
 	assert.FileExists(t, expectedFilePath)
 }

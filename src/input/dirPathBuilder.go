@@ -2,7 +2,6 @@ package input
 
 import (
 	"fmt"
-	"sort"
 	"utils"
 )
 
@@ -10,17 +9,17 @@ const defaultDirPathValue int = -1
 
 //DirPath The structure that contains all information needed to download a subtitle
 type DirPath struct {
-	RootPath string
-	Folder   string
-	FullPath string
+	RootPath  string
+	Folder    string
+	FullPath  string
 	Extension string
 }
 
 // DirPathBuilder Structure used to instantiate properties needed to build a DirPath
 type DirPathBuilder struct {
-	defaultDirPath string
+	defaultDirPath    string
 	subtitleExtension string
-	mapping map[int]string
+	mapping           map[int]string
 }
 
 // NewDirPathBuilder return a new DirPathBuilder structure
@@ -51,20 +50,4 @@ func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPa
 		FullPath:  fmt.Sprintf("%s/%s", rootPath, showFolder),
 		Extension: builder.subtitleExtension,
 	}, error
-}
-
-// GetSortedMapping Sort the DirPaths' mapping by numeric
-func (builder *DirPathBuilder) GetSortedMapping()map[int]string {
-	sortedMapping := make(map[int]string)
-
-	keys := make([]int, 0, len(builder.mapping))
-	for k := range builder.mapping {
-		keys = append(keys, k)
-	}
-	sort.Ints(keys)
-
-	for _, element := range keys {
-		sortedMapping[element] = builder.mapping[element]
-	}
-	return sortedMapping
 }

@@ -14,7 +14,7 @@ import (
 // Default is the default path to use
 type DirPathsConfig struct {
 	Available map[string]string `json:"Available"`
-	Default string `json:"Default"`
+	Default   string            `json:"Default"`
 }
 
 // LanguagesConfig Define a structure for the Language configurations
@@ -22,7 +22,7 @@ type DirPathsConfig struct {
 // Default is the default language to use
 type LanguagesConfig struct {
 	Available map[string]string `json:"Available"`
-	Default string `json:"Default"`
+	Default   string            `json:"Default"`
 }
 
 // Configuration Define a structure for the configuration that could be used everywhere

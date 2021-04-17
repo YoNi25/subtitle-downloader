@@ -106,9 +106,9 @@ func (i *Reader) readShowName() (string, error) {
 }
 
 func (i *Reader) readDirPath() (int, error) {
-	i.colors.Green.Println("Indicate the directory path where the file should be download")
+	i.colors.Green.Println("Indicate the directory path where the file will be downloaded")
 
-	for key, value := range i.dirPathBuilder.GetSortedMapping() {
+	for key, value := range i.dirPathBuilder.mapping {
 		i.colors.White.Printf("[%d] - %s\n", key, value)
 	}
 
@@ -128,7 +128,7 @@ func (i *Reader) readDirPath() (int, error) {
 
 func (i *Reader) readLanguage() (int, error) {
 	i.colors.Green.Printf("Indicate the subtitles' Language\n")
-	for key, value := range i.languageBuilder.GetSortedMapping()  {
+	for key, value := range i.languageBuilder.mapping {
 		i.colors.White.Printf("[%d] - %s\n", key, value)
 	}
 

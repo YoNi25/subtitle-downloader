@@ -16,7 +16,7 @@ type subtitleToDownload struct {
 
 // SubtitleDownloader structure to construct a SubtitleDownloader
 type SubtitleDownloader struct {
-	colors   utils.ColorsStruct
+	colors utils.ColorsStruct
 }
 
 // NewSubtitleDownloader return a new SubtitleDownloader struct
@@ -32,8 +32,7 @@ func (subtitleDownloader *SubtitleDownloader) downloadShowsSubtitles(subtitleToD
 
 	subtitleDownloader.colors.Green.Printf("📥 Download srt for %s\n", subtitleToDownload.name)
 
-	if _, err := os.Stat(subtitleToDownload.dirPath)
-		os.IsNotExist(err) {
+	if _, err := os.Stat(subtitleToDownload.dirPath); os.IsNotExist(err) {
 		warnings = append(warnings, utils.Warning{fmt.Sprintf("Missing directory %s. Creating ...", subtitleToDownload.dirPath)})
 		os.MkdirAll(subtitleToDownload.dirPath, 0755)
 	}
