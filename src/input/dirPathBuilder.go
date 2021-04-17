@@ -10,17 +10,17 @@ const defaultDirPathValue int = -1
 
 //DirPath The structure that contains all information needed to download a subtitle
 type DirPath struct {
-	RootPath string
-	Folder   string
-	FullPath string
+	RootPath  string
+	Folder    string
+	FullPath  string
 	Extension string
 }
 
 // DirPathBuilder Structure used to instantiate properties needed to build a DirPath
 type DirPathBuilder struct {
-	defaultDirPath string
+	defaultDirPath    string
 	subtitleExtension string
-	mapping map[int]string
+	mapping           map[int]string
 }
 
 // NewDirPathBuilder return a new DirPathBuilder structure

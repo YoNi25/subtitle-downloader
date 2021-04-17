@@ -15,7 +15,7 @@ type searchSubtitle struct {
 
 // SubtitleSearcher structure to construct a SubtitleSearcher
 type SubtitleSearcher struct {
-	colors   utils.ColorsStruct
+	colors utils.ColorsStruct
 }
 
 // NewSubtitleSearcher return a new SubtitleSearcher struct

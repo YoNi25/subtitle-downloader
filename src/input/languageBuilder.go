@@ -11,7 +11,7 @@ const defaultLanguageValue int = -1
 // LanguageBuilder Structure used to instanciate properties needed to build the LanguageBuilder string
 type LanguageBuilder struct {
 	defaultLanguage string
-	mapping map[int]string
+	mapping         map[int]string
 }
 
 // NewLanguageBuilder return a new LanguageBuilder structure
