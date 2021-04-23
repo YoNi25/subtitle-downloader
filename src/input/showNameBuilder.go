@@ -35,7 +35,7 @@ func (builder *ShowNameBuilder) build(showNameStr string) (ShowName, error) {
 
 	match := builder.showNamePattern.FindStringSubmatch(showNameStr)
 	if len(match) == 0 {
-		return ShowName{}, fmt.Errorf("Unable to parse Show name '%s", showNameStr)
+		return ShowName{}, fmt.Errorf("Unable to parse Show name '%s'", showNameStr)
 	}
 
 	result := builder.mapRegexpToNamedVariables(match)

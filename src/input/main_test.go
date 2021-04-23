@@ -151,7 +151,7 @@ func Test_FailBuildSubtitleToDownload(t *testing.T) {
 	sut := NewInputReader(&stdin, utils.Colors, utils.Config, false)
 	_, err := sut.buildSubtitleToDownload("a-wrong-tv-show-name", serverDirPath, french)
 
-	assert.Equal(t, err, &utils.Error{"Unable to parse Show name 'a-wrong-tv-show-name"})
+	assert.Equal(t, err, &utils.Error{"Unable to parse Show name 'a-wrong-tv-show-name'"})
 }
 
 func Test_BuildInputWithWarnings(t *testing.T) {
