@@ -19,7 +19,13 @@ else
 	@echo "$(CONFIG_DIR)/config.$(ENV).json already created"
 endif
 
-build: init ## Build the project. Use BUILD_TARGET=`path to build target` (Default '../bin/subtitle-downloader')
+install: ## Install dependencies
+	cd $(SOURCE_DIR) && \
+	go mod download && \
+    go install -v ./... && \
+	cd -
+
+build: init install ## Build the project. Use BUILD_TARGET=`path to build target` (Default '../bin/subtitle-downloader')
 	cd $(SOURCE_DIR) && \
 	go build -o $(BUILD_DIR)/$(TARGET_NAME) . && \
 	cd -
