@@ -5,9 +5,14 @@ import (
 	"flag"
 	"input"
 	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 	"utils"
 )
 
+var directory bool
 var useDefaultValues bool
 
 //SubtitleDownloader Define the main structure command
@@ -30,17 +35,39 @@ func NewSubtitleDownloader(reader io.Reader) *SubtitleDownloader {
 //Execute Ask questions to user and download corresponding subtitle
 func (sd *SubtitleDownloader) Execute() {
 
-	initializeCommandArgs()
-
+	flag.Parse()
 	inputInstance := input.NewInputReader(sd.reader, sd.colors, sd.config, useDefaultValues)
-	downloaderInstance := downloader.NewDownloader(sd.colors)
 
-	subtitleToDownload := inputInstance.ReadInputArgs()
-
-	downloaderInstance.DownloadSubtitles(subtitleToDownload)
+	var toDownload input.Downloadable
+	if directory == true {
+		toDownload = inputInstance.BuildDirectoryToDownloadFromInputs()
+	} else {
+		toDownload = inputInstance.BuildSubtitleToDownloadFromInputs()
+	}
+	downloadSubtitles(inputInstance, sd, toDownload)
 }
 
-func initializeCommandArgs() {
+func downloadSubtitles(inputInstance *input.Reader, sd *SubtitleDownloader, toDownload input.Downloadable) {
+	downloaderInstance := downloader.NewDownloader(sd.colors)
+
+	if toDownload.TypeOf() == "directory" {
+
+		file, _ := os.Stat(toDownload.Path())
+		if file.IsDir() {
+			files, _ := ioutil.ReadDir(toDownload.Path())
+			directoryToDownload := toDownload.(input.DirectoryToDownload)
+			for _, f := range files {
+				tvShowName := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
+				subtitleToDownload := directoryToDownload.BuildSubtitleToDownload(inputInstance, tvShowName)
+				downloaderInstance.DownloadSubtitles(subtitleToDownload)
+			}
+		}
+	} else {
+		downloaderInstance.DownloadSubtitles(toDownload.(input.SubtitleToDownload))
+	}
+}
+
+func init() {
 	flag.BoolVar(&useDefaultValues, "fast", false, "Use default values for Language and Dir Path")
-	flag.Parse()
+	flag.BoolVar(&directory, "directory", false, "Download all subtitles for a given directory")
 }
