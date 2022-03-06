@@ -33,7 +33,7 @@ func NewDirPathBuilder(config utils.DirPathsConfig, subtitleExtension string) *D
 	return construct
 }
 
-func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPath, error) {
+func (builder *DirPathBuilder) build(dirPathDigit int, showFolder string) (DirPath, error) {
 	var error error
 
 	rootPath, ok := builder.mapping[dirPathDigit]
@@ -41,13 +41,10 @@ func (builder *DirPathBuilder) build(dirPathDigit int, showName ShowName) (DirPa
 		error = fmt.Errorf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, builder.defaultDirPath)
 		rootPath = builder.defaultDirPath
 	}
-
-	showFolder := fmt.Sprintf("%s/%s", showName.TvShow, showName.Season)
-
 	return DirPath{
 		RootPath:  rootPath,
 		Folder:    showFolder,
-		FullPath:  fmt.Sprintf("%s/%s", rootPath, showFolder),
+		FullPath:  fmt.Sprintf("%s%c%s", rootPath, os.PathSeparator, showFolder),
 		Extension: builder.subtitleExtension,
 	}, error
 }
