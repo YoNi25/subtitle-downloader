@@ -2,6 +2,7 @@ package input
 
 import (
 	"fmt"
+	"os"
 	"utils"
 )
 
@@ -38,7 +39,7 @@ func (builder *DirPathBuilder) build(dirPathDigit int, showFolder string) (DirPa
 
 	rootPath, ok := builder.mapping[dirPathDigit]
 	if !ok {
-		error = fmt.Errorf("No DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, builder.defaultDirPath)
+		error = fmt.Errorf("no DirPath matches with %d. Using default DirPath - '%s'", dirPathDigit, builder.defaultDirPath)
 		rootPath = builder.defaultDirPath
 	}
 	return DirPath{

@@ -66,7 +66,7 @@ func (i *Reader) BuildSubtitleToDownloadFromInputs() SubtitleToDownload {
 		err = i.confirmInput()
 		if err != nil {
 			i.colors.Red.Printf("%s\n", err)
-			os.Exit(1)
+			os.Exit(2)
 		}
 	}
 

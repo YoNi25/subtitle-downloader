@@ -30,7 +30,7 @@ func (builder *LanguageBuilder) build(languageDigit int) (string, error) {
 
 	language, ok := builder.mapping[languageDigit]
 	if !ok {
-		error = fmt.Errorf("No Language matches with %d. Using default Language - '%s'", languageDigit, builder.defaultLanguage)
+		error = fmt.Errorf("no Language matches with %d. Using default Language - '%s'", languageDigit, builder.defaultLanguage)
 		language = builder.defaultLanguage
 	}
 

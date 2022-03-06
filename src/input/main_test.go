@@ -186,7 +186,7 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 				DirPath:  dirPath,
 				Language: "French",
 			},
-			utils.Warnings{{"No DirPath matches with -1. Using default DirPath - '/a/server/dir/path'"}},
+			utils.Warnings{{"no DirPath matches with -1. Using default DirPath - '/a/server/dir/path'"}},
 		},
 		{
 			serverDirPath,
@@ -196,7 +196,7 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 				DirPath:  dirPath,
 				Language: "Zulu",
 			},
-			utils.Warnings{{"No Language matches with -1. Using default Language - 'Zulu'"}},
+			utils.Warnings{{"no Language matches with -1. Using default Language - 'Zulu'"}},
 		},
 		{
 			42,
@@ -207,8 +207,8 @@ func Test_BuildInputWithWarnings(t *testing.T) {
 				Language: "Zulu",
 			},
 			utils.Warnings{
-				{"No DirPath matches with 42. Using default DirPath - '/a/server/dir/path'"},
-				{"No Language matches with 42. Using default Language - 'Zulu'"},
+				{"no DirPath matches with 42. Using default DirPath - '/a/server/dir/path'"},
+				{"no Language matches with 42. Using default Language - 'Zulu'"},
 			},
 		},
 	}
