@@ -12,22 +12,18 @@ import (
 	"utils"
 )
 
-// SubtitleToDownload Structure that contains structured information needed to download subtitles
-type SubtitleToDownload struct {
-	ShowName ShowName
-	Language string
-	DirPath  DirPath
-}
-
-// Reader Structure used to instanciate properties needed to read user's inputs
+// Reader Structure used to instantiate properties needed to read user's inputs
 type Reader struct {
-	colors           utils.ColorsStruct
-	config           utils.Configuration
-	reader           *bufio.Reader
-	useDefaultValues bool
-	showNameBuilder  *ShowNameBuilder
-	dirPathBuilder   *DirPathBuilder
-	languageBuilder  *LanguageBuilder
+	colors               utils.ColorsStruct
+	config               utils.Configuration
+	reader               *bufio.Reader
+	useDefaultValues     bool
+	showNameBuilder      *ShowNameBuilder
+	directoryNameBuilder *DirectoryNameBuilder
+	dirPathBuilder       *DirPathBuilder
+	languageBuilder      *LanguageBuilder
+	defaultDirPathDigit  int
+	defaultLanguageDigit int
 }
 
 // NewInputReader return a new Reader struct
@@ -38,39 +34,23 @@ func NewInputReader(readBuffer io.Reader, colors utils.ColorsStruct, config util
 	construct.config = config
 	construct.useDefaultValues = useDefaultValues
 	construct.showNameBuilder = NewShowNameBuilder()
+	construct.directoryNameBuilder = NewDirectoryNameBuilder()
 	construct.dirPathBuilder = NewDirPathBuilder(config.DirPathsConfig, config.SubtitleExtension)
 	construct.languageBuilder = NewLanguageBuilder(config.LanguagesConfig)
+
+	construct.defaultDirPathDigit = defaultDirPathValue
+	construct.defaultLanguageDigit = defaultLanguageValue
 
 	return construct
 }
 
-// ReadInputArgs Prompt all question to the user, then wrap them to a structure that will be used later
-func (i *Reader) ReadInputArgs() SubtitleToDownload {
+// BuildSubtitleToDownloadFromInputs Prompt all question to the user to download a subtitle from a episode name, then wrap them to a structure that will be used later
+func (i *Reader) BuildSubtitleToDownloadFromInputs() SubtitleToDownload {
 
-	showName, err := i.readShowName()
-	var dirPathDigit = defaultDirPathValue
-	var languageDigit = defaultLanguageValue
-
-	if err != nil {
-		i.colors.Red.Printf("%s\n", err)
-		os.Exit(1)
-	}
-
-	if i.useDefaultValues != true {
-		dirPathDigit, err = i.readDirPath()
-		if err != nil {
-			i.colors.Red.Printf("%s\n", err)
-			os.Exit(1)
-		}
-
-		languageDigit, err = i.readLanguage()
-		if err != nil {
-			i.colors.Red.Printf("%s\n", err)
-			os.Exit(1)
-		}
-	}
+	showName, dirPathDigit, languageDigit, err := i.readShowNameInputArgs()
 
 	subtitleToDownload, err := i.buildSubtitleToDownload(showName, dirPathDigit, languageDigit)
+
 	if err != nil {
 		typeOf := reflect.TypeOf(err)
 		if (typeOf == reflect.TypeOf(&utils.Error{})) {
@@ -86,11 +66,86 @@ func (i *Reader) ReadInputArgs() SubtitleToDownload {
 		err = i.confirmInput()
 		if err != nil {
 			i.colors.Red.Printf("%s\n", err)
-			os.Exit(2)
+			os.Exit(1)
 		}
 	}
 
 	return subtitleToDownload
+}
+
+// BuildDirectoryToDownloadFromInputs Prompt all question to the user to download all subtitles for a directory, then wrap them to a structure that will be used later
+func (i *Reader) BuildDirectoryToDownloadFromInputs() DirectoryToDownload {
+
+	directoryName, dirPathDigit, languageDigit, err := i.readDirectoryInputArgs()
+
+	directoryToDownload, err := i.buildDirectoryToDownload(directoryName, dirPathDigit, languageDigit)
+	if err != nil {
+		typeOf := reflect.TypeOf(err)
+		if (typeOf == reflect.TypeOf(&utils.Error{})) {
+			i.colors.Red.Printf("%s\n", err)
+			os.Exit(3)
+		} else if typeOf == reflect.TypeOf(utils.Warnings{}) {
+			i.colors.Yellow.Printf("%s\n", err)
+		}
+	}
+
+	i.displayDirectoryToDownloadInformation(directoryToDownload)
+	if i.useDefaultValues != true {
+		err = i.confirmInput()
+		if err != nil {
+			i.colors.Red.Printf("%s\n", err)
+			os.Exit(2)
+		}
+	}
+
+	return directoryToDownload
+}
+
+func (i *Reader) readShowNameInputArgs() (string, int, int, error) {
+	showName, err := i.readShowName()
+
+	if err != nil {
+		i.colors.Red.Printf("%s\n", err)
+		os.Exit(1)
+	}
+
+	dirPathDigit, languageDigit, err := i.readPathAndLanguage()
+	return showName, dirPathDigit, languageDigit, err
+}
+
+func (i *Reader) readDirectoryInputArgs() (string, int, int, error) {
+
+	directoryName, err := i.readDirectoryName()
+
+	if err != nil {
+		i.colors.Red.Printf("%s\n", err)
+		os.Exit(1)
+	}
+
+	dirPathDigit, languageDigit, err := i.readPathAndLanguage()
+
+	return directoryName, dirPathDigit, languageDigit, err
+}
+
+func (i *Reader) readPathAndLanguage() (int, int, error) {
+	var dirPathDigit = i.defaultDirPathDigit
+	var languageDigit = i.defaultLanguageDigit
+	var err error
+
+	if i.useDefaultValues != true {
+		dirPathDigit, err = i.readDirPath()
+		if err != nil {
+			i.colors.Red.Printf("%s\n", err)
+			os.Exit(1)
+		}
+
+		languageDigit, err = i.readLanguage()
+		if err != nil {
+			i.colors.Red.Printf("%s\n", err)
+			os.Exit(1)
+		}
+	}
+	return dirPathDigit, languageDigit, err
 }
 
 func (i *Reader) readShowName() (string, error) {
@@ -103,6 +158,18 @@ func (i *Reader) readShowName() (string, error) {
 	}
 
 	return convertCRLFtoLF(showNameInput), nil
+}
+
+func (i *Reader) readDirectoryName() (string, error) {
+	i.colors.Green.Println("Indicate the directory")
+
+	directoryNameInput, err := i.reader.ReadString('\n')
+
+	if err != nil {
+		return "", &utils.Error{fmt.Sprintf("Read directory failed - '%s'", err)}
+	}
+
+	return convertCRLFtoLF(directoryNameInput), nil
 }
 
 func (i *Reader) readDirPath() (int, error) {
@@ -173,6 +240,15 @@ func (i *Reader) displaySubtitleToDownloadInformation(subtitleToDownload Subtitl
 	i.colors.Blue.Println("-------------------------------------------------")
 }
 
+func (i *Reader) displayDirectoryToDownloadInformation(directoryToDownload DirectoryToDownload) {
+	i.colors.Blue.Println()
+	i.colors.Blue.Println("---------------------SUMMARY---------------------")
+	i.colors.Blue.Printf("Download Directory : %s\n", directoryToDownload.DirectoryName.path())
+	i.colors.Blue.Printf("Chosen Language : %s\n", directoryToDownload.Language)
+	i.colors.Blue.Printf("Directory path : %s\n", directoryToDownload.DirPath.FullPath)
+	i.colors.Blue.Println("-------------------------------------------------")
+}
+
 func convertCRLFtoLF(toConvert string) string {
 	return strings.Replace(toConvert, "\n", "", -1)
 }
@@ -186,7 +262,7 @@ func (i *Reader) buildSubtitleToDownload(showName string, dirPathDigit int, lang
 		return SubtitleToDownload{}, &utils.Error{showNameError.Error()}
 	}
 
-	dirPathStruct, dirPathError := i.dirPathBuilder.build(dirPathDigit, showNameStruct)
+	dirPathStruct, dirPathError := i.dirPathBuilder.build(dirPathDigit, showNameStruct.path())
 	if dirPathError != nil {
 		warnings = append(warnings, utils.Warning{dirPathError.Error()})
 	}
@@ -200,6 +276,32 @@ func (i *Reader) buildSubtitleToDownload(showName string, dirPathDigit int, lang
 		ShowName: showNameStruct,
 		DirPath:  dirPathStruct,
 		Language: languageString,
+	}, warnings
+}
+
+func (i *Reader) buildDirectoryToDownload(directoryName string, dirPathDigit int, languageDigit int) (DirectoryToDownload, error) {
+
+	directoryNameStruct, directoryNameError := i.directoryNameBuilder.build(directoryName)
+	var warnings utils.Warnings
+
+	if directoryNameError != nil {
+		return DirectoryToDownload{}, &utils.Error{directoryNameError.Error()}
+	}
+
+	dirPathStruct, dirPathError := i.dirPathBuilder.build(dirPathDigit, directoryNameStruct.path())
+	if dirPathError != nil {
+		warnings = append(warnings, utils.Warning{dirPathError.Error()})
+	}
+
+	languageString, languageError := i.languageBuilder.build(languageDigit)
+	if languageError != nil {
+		warnings = append(warnings, utils.Warning{languageError.Error()})
+	}
+
+	return DirectoryToDownload{
+		DirectoryName: directoryNameStruct,
+		DirPath:       dirPathStruct,
+		Language:      languageString,
 	}, warnings
 }
 

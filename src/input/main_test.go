@@ -151,7 +151,7 @@ func Test_FailBuildSubtitleToDownload(t *testing.T) {
 	sut := NewInputReader(&stdin, utils.Colors, utils.Config, false)
 	_, err := sut.buildSubtitleToDownload("a-wrong-tv-show-name", serverDirPath, french)
 
-	assert.Equal(t, err, &utils.Error{"Unable to parse Show name 'a-wrong-tv-show-name'"})
+	assert.Equal(t, err, &utils.Error{"unable to parse Show name 'a-wrong-tv-show-name'"})
 }
 
 func Test_BuildInputWithWarnings(t *testing.T) {
@@ -265,7 +265,7 @@ func Test_readInputs(t *testing.T) {
 	stdin.Write([]byte("2\n"))
 	stdin.Write([]byte("y\n"))
 
-	subtitleToDownload := sut.ReadInputArgs()
+	subtitleToDownload := sut.BuildSubtitleToDownloadFromInputs()
 
 	assert.Equal(t, expectedInput, subtitleToDownload)
 }
@@ -297,7 +297,7 @@ func Test_readInputsWithEmptyValues(t *testing.T) {
 	stdin.Write([]byte("\n"))
 	stdin.Write([]byte("\n"))
 
-	subtitleToDownload := sut.ReadInputArgs()
+	subtitleToDownload := sut.BuildSubtitleToDownloadFromInputs()
 
 	assert.Equal(t, expectedInput, subtitleToDownload)
 }
@@ -327,7 +327,7 @@ func Test_readInputsWithUsingDefaultValues(t *testing.T) {
 
 	stdin.Write([]byte("Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME\n"))
 
-	subtitleToDownload := sut.ReadInputArgs()
+	subtitleToDownload := sut.BuildSubtitleToDownloadFromInputs()
 
 	assert.Equal(t, expectedInput, subtitleToDownload)
 }
