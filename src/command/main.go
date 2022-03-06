@@ -2,7 +2,9 @@ package command
 
 import (
 	"downloader"
+	"errors"
 	"flag"
+	"fmt"
 	"input"
 	"io"
 	"io/ioutil"
@@ -57,9 +59,20 @@ func downloadSubtitles(inputInstance *input.Reader, sd *SubtitleDownloader, toDo
 			files, _ := ioutil.ReadDir(toDownload.Path())
 			directoryToDownload := toDownload.(input.DirectoryToDownload)
 			for _, f := range files {
-				tvShowName := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
-				subtitleToDownload := directoryToDownload.BuildSubtitleToDownload(inputInstance, tvShowName)
-				downloaderInstance.DownloadSubtitles(subtitleToDownload)
+				// Ignore srt files
+				matched, _ := filepath.Match(fmt.Sprintf("*.%s", sd.config.SubtitleExtension), filepath.Base(f.Name()))
+				if !matched {
+					tvShowName := strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
+					subtitleFileName := fmt.Sprintf("%s%c%s.%s", toDownload.Path(), os.PathSeparator, tvShowName, sd.config.SubtitleExtension)
+					// Check if srt already exist for the given file
+					if _, err := os.Stat(subtitleFileName); errors.Is(err, os.ErrNotExist) {
+						subtitleToDownload := directoryToDownload.BuildSubtitleToDownload(inputInstance, tvShowName)
+						downloaderInstance.DownloadSubtitles(subtitleToDownload)
+					} else {
+						warning := utils.Warning{Message: fmt.Sprintf("file %s already exists", subtitleFileName)}
+						sd.colors.Yellow.Printf("%s\n", warning.Error())
+					}
+				}
 			}
 		}
 	} else {
