@@ -62,5 +62,13 @@ func Test_InvalidShowName(t *testing.T) {
 	showNameStruct, err := sut.build("an-invalid-show-name")
 
 	assert.Equal(t, ShowName{}, showNameStruct)
-	assert.Equal(t, "Unable to parse Show name 'an-invalid-show-name'", err.Error())
+	assert.Equal(t, "unable to parse Show name 'an-invalid-show-name'", err.Error())
+}
+
+func Test_readPathForShowName(t *testing.T) {
+	sut := ShowName{
+		TvShow: "A Tv Show",
+		Season: "S02",
+	}
+	assert.Equal(t, "A Tv Show/S02", sut.path())
 }

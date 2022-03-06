@@ -45,6 +45,15 @@ on config/config.json file, you can add the flag `--fast` when you're running th
 make execute OPT='--fast'
 ```
 
+If you want to download all subtitles from a specific directory, you can use the option `--directory`
+Then indicate the directory path. 
+The executable will ignore all subtitles files that already exists
+
+The expected directory path name is something like `The Falcon And The Winter Soldier/S01` or `The.Falcon.And.The.Winter.TSoldier/S01`
+```shell
+make execute OPT='--directory'
+```
+
 ### Usage Examples
 
 #### Standard Usage

@@ -31,5 +31,5 @@ func Test_BuildLanguageWithDefaultValue(t *testing.T) {
 
 	language, err := sut.build(-1)
 	assert.Equal(t, "Zulu", language)
-	assert.Equal(t, "No Language matches with -1. Using default Language - 'Zulu'", err.Error())
+	assert.Equal(t, "no Language matches with -1. Using default Language - 'Zulu'", err.Error())
 }
