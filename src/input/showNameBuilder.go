@@ -2,6 +2,7 @@ package input
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -16,6 +17,11 @@ type ShowName struct {
 	Version  string
 	Source   string
 	Fullname string
+}
+
+// Return a generated path for the TVShow
+func (showName *ShowName) path() string {
+	return fmt.Sprintf("%s%c%s", showName.TvShow, os.PathSeparator, showName.Season)
 }
 
 // ShowNameBuilder Structure used to instanciate properties needed to build the ShowName
@@ -35,14 +41,16 @@ func (builder *ShowNameBuilder) build(showNameStr string) (ShowName, error) {
 
 	match := builder.showNamePattern.FindStringSubmatch(showNameStr)
 	if len(match) == 0 {
-		return ShowName{}, fmt.Errorf("Unable to parse Show name '%s'", showNameStr)
+		return ShowName{}, fmt.Errorf("unable to parse Show name '%s'", showNameStr)
 	}
 
 	result := builder.mapRegexpToNamedVariables(match)
 
+	tvShowName := strings.Title(strings.ReplaceAll(result["tvShow"], ".", " "))
+	season := strings.Title(result["season"])
 	return ShowName{
-		strings.Title(strings.ReplaceAll(result["tvShow"], ".", " ")),
-		strings.Title(result["season"]),
+		tvShowName,
+		season,
 		strings.Title(result["episode"]),
 		strings.ToUpper(result["version"]),
 		result["source"],
