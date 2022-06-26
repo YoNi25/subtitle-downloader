@@ -46,6 +46,17 @@ func Test_buildShowName(t *testing.T) {
 				Fullname: "Age.of.Samurai.Battle.for.Japan.S01E01.VOSTFR.WEB.XviD-EXTREME",
 			},
 		},
+		{
+			"Obi-Wan.Kenobi.S01E06.1080p.WebRip.X264.AC3.Will1869[eztv.re]",
+			ShowName{
+				TvShow:   "Obi-Wan Kenobi",
+				Season:   "S01",
+				Episode:  "E06",
+				Version:  "",
+				Source:   "eztv.re",
+				Fullname: "Obi-Wan.Kenobi.S01E06.1080p.WebRip.X264.AC3.Will1869[eztv.re]",
+			},
+		},
 	}
 
 	for _, test := range flagtests {

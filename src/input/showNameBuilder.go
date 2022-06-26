@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const showNamePattern = "(?P<tvShow>.*)\\.(?P<season>S\\d+)(?P<episode>E\\d+).*-(?P<version>[^\\[]*)(\\[(?P<source>.*)\\])?"
+const showNamePattern = "(?P<tvShow>.*)\\.(?P<season>S\\d+)(?P<episode>E\\d+)[^-\\[]*-?(?P<version>[^\\[]*)(\\[(?P<source>.*)\\])?"
 
 //ShowName The structure that contains all Show information
 type ShowName struct {
