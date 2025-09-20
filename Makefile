@@ -19,7 +19,7 @@ else
 	@echo "$(CONFIG_DIR)/config.$(ENV).json already created"
 endif
 
-install: ## Install dependencies
+install: update-deps ## Install dependencies
 	cd $(SOURCE_DIR) && \
 	go mod download && \
     go install -v ./... && \
@@ -51,3 +51,12 @@ vet : ## Run Vet
 
 lint: ## Run linter
 	$(LINTER_PATH) $(SOURCE_DIR)/...
+
+update-deps: ## Update all dependencies
+	@echo "📦 Update all dependencies"
+	@find . -name "go.mod" -execdir sh -c ' \
+		echo "➡️  Update into $$(pwd) module"; \
+		go get -u ./...; \
+		go mod tidy; \
+	' \;
+	@echo "✅ Done."
