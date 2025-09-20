@@ -1,6 +1,10 @@
 # subtitle-downloader
 Download subtittle from Addic7ed thanks to https://github.com/matcornic/addic7ed
 
+## Requirements 
+- [Install `Go`](https://go.dev/doc/install)
+
+
 ## Quick start 
 You could use the executable by using the command 
 
