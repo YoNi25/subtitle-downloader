@@ -13,7 +13,7 @@ type ColorsStruct struct {
 
 func initializeColors() ColorsStruct {
 	return ColorsStruct{
-		Green:  color.New(color.FgHiGreen, color.Bold).Add(color.Concealed),
+		Green:  color.New(color.FgHiGreen, color.Bold),
 		Red:    color.New(color.FgHiRed, color.Bold),
 		White:  color.New(color.FgHiWhite, color.Faint),
 		Yellow: color.New(color.FgHiYellow, color.Bold),
