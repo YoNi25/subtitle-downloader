@@ -29,7 +29,7 @@ Then you could set your own default values for the project' settings :
 * etc...
 
 ### Build the executable
-To build sources to an executable, go to `src` directory, then run 
+To build sources to an executable, go to `root` directory, then run
 
 ```shell
 make build
